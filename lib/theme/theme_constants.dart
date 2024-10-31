@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 const COLOR_PRIMARY_LIGHT = Color(0xffdad8d4);
 const COLOR_ACCENT_LIGHT = Color(0xff151515);
-const COLOR_ACCENT_DARK = Color(0xffe63c3a);
+const COLOR_ACCENT_DARK = Color.fromARGB(255, 163, 58, 58);
 const COLOR_BUTTONS_LIGHT = Color(0xffe63c3a);
 const COLOR_BUTTONS_DARK = Color.fromARGB(255, 67, 66, 66);
 const COLOR_INPUT_OUTLINE_LIGHT = Color(0xff535151);
@@ -17,7 +17,7 @@ ThemeData lightTheme = ThemeData(
   primaryColor: COLOR_PRIMARY_LIGHT,
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     shape: const CircleBorder(),
-    backgroundColor: COLOR_ACCENT_LIGHT,
+    backgroundColor: COLOR_BUTTONS_LIGHT,
     splashColor: Colors.white.withOpacity(0.25),
     iconSize: 15,
   ),
@@ -69,6 +69,18 @@ ThemeData lightTheme = ThemeData(
           GoogleFonts.poppins(fontSize: 20.0, fontWeight: FontWeight.w600),
     ),
   ),
+  iconButtonTheme: IconButtonThemeData(
+    style: IconButton.styleFrom(
+      backgroundColor: COLOR_BUTTONS_LIGHT,
+      
+    ),
+  ),
+  outlinedButtonTheme: OutlinedButtonThemeData(
+    style: OutlinedButton.styleFrom(
+      foregroundColor: Colors.black,
+      textStyle: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w300),
+    ),
+  ),
 );
 
 ThemeData darkTheme = ThemeData(
@@ -86,7 +98,7 @@ ThemeData darkTheme = ThemeData(
           borderRadius: BorderRadius.circular(20.0),
         ),
         foregroundColor: Colors.white,
-        backgroundColor: COLOR_BUTTONS_DARK),
+        backgroundColor: COLOR_ACCENT_DARK),
   ),
   inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
@@ -131,6 +143,17 @@ ThemeData darkTheme = ThemeData(
       foregroundColor: Colors.white,
       textStyle:
           GoogleFonts.poppins(fontSize: 20.0, fontWeight: FontWeight.w600),
+    ),
+  ),
+  iconButtonTheme: IconButtonThemeData(
+    style: IconButton.styleFrom(
+      backgroundColor: COLOR_ACCENT_DARK,
+    ),
+  ),
+  outlinedButtonTheme: OutlinedButtonThemeData(
+    style: OutlinedButton.styleFrom(
+      foregroundColor: Colors.white,
+      textStyle: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w300),
     ),
   ),
 );

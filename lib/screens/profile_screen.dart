@@ -41,7 +41,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   SettingsButton(
                     onpressed: () {},
-                    icon: Icons.settings,
+                    icon: Icons.admin_panel_settings,
                     label: 'Profile Management',
                   )
                 ],

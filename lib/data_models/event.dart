@@ -2,18 +2,14 @@ import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
 
-
 enum Status {
-  upcoming,
-  current,
-  past;
+  Upcoming,
+  Current,
+  Past;
 }
 
-enum Category {
-  birthday,
-  party,
-  conference
-}
+enum Category { birthday, party, conference }
+
 class Event {
   final String name;
   final Category category;

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hedieaty2/components/home_screen/sleek_card_button.dart';
+import 'package:hedieaty2/components/general_components/icon_next_to_title.dart';
+import 'package:hedieaty2/components/home_screen/add_event_button.dart';
+import 'package:hedieaty2/components/home_screen/my_event_button.dart';
 import 'package:hedieaty2/components/home_screen/user_item.dart';
+import 'package:hedieaty2/data_models/event.dart';
 import 'package:hedieaty2/data_models/user.dart';
 import 'package:hedieaty2/utils/helper_widgets.dart';
 
@@ -11,6 +14,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SingleChildScrollView(
       child: Column(
@@ -26,7 +30,7 @@ class HomeScreen extends StatelessWidget {
                   style: GoogleFonts.poppins(fontSize: 30, color: Colors.grey),
                 ),
                 Text(
-                  'User!',
+                  'Omar!',
                   style: GoogleFonts.poppins(
                       fontSize: 30, fontWeight: FontWeight.bold),
                 ),
@@ -50,15 +54,40 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 addVerticalSpace(20),
-                const GoodCard(),
+                FittedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const GoodCard(
+                        text: 'My Events',
+                        subText: '3',
+                      ),
+                      addHorizontalSpace(10),
+                      const AddEventButton(
+                        text: 'Create \nYour Own \nEvent/List',
+                      ),
+                      addHorizontalSpace(20)
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
           Container(
             margin: const EdgeInsets.fromLTRB(20, 50, 0, 0),
-            child: Text(
-              'My Contacts',
-              style: textTheme.titleLarge!.copyWith(fontSize: 25),
+            child: Row(
+              children: [
+                Text(
+                  'My Contacts',
+                  style: textTheme.titleLarge!.copyWith(fontSize: 25),
+                ),
+                const Spacer(),
+                IconNextToTitleButton(
+                  isDark: isDark,
+                  icon: Icons.search,
+                ),
+                addHorizontalSpace(10)
+              ],
             ),
           ),
           addVerticalSpace(10),
@@ -69,37 +98,59 @@ class HomeScreen extends StatelessWidget {
                 UserItem(
                   userData: User(
                       name: 'Omar',
-                      createdEvents: [],
+                      createdEvents: [
+                        Event(
+                            name: 'name',
+                            category: Category.birthday,
+                            status: Status.Current),
+                      ],
                       pledgedGifts: [],
-                      phoneNumber: '01004111222'),
+                      phoneNumber: '0121477522'),
                 ),
                 UserItem(
                   userData: User(
-                      name: 'Omar',
-                      createdEvents: [],
+                      name: 'Emad',
+                      createdEvents: [
+                        Event(
+                            name: 'name',
+                            category: Category.birthday,
+                            status: Status.Current),
+                        Event(
+                            name: 'yes',
+                            category: Category.birthday,
+                            status: Status.Current),
+                        Event(
+                            name: 'wow',
+                            category: Category.birthday,
+                            status: Status.Current),
+                        Event(
+                            name: 'alright',
+                            category: Category.birthday,
+                            status: Status.Current),
+                      ],
                       pledgedGifts: [],
-                      phoneNumber: '01000100311'),
+                      phoneNumber: '0100500522'),
                 ),
                 UserItem(
                   userData: User(
-                      name: 'Omar',
+                      name: 'The Train Driver',
                       createdEvents: [],
                       pledgedGifts: [],
-                      phoneNumber: '0106147853'),
+                      phoneNumber: '012330522'),
                 ),
                 UserItem(
                   userData: User(
-                      name: 'Omar',
+                      name: 'Some Random Person',
                       createdEvents: [],
                       pledgedGifts: [],
-                      phoneNumber: '01004441517'),
+                      phoneNumber: '08877300522'),
                 ),
                 UserItem(
                   userData: User(
-                      name: 'Omar',
+                      name: 'Lily Chou',
                       createdEvents: [],
                       pledgedGifts: [],
-                      phoneNumber: '01224448999'),
+                      phoneNumber: '01063101122'),
                 ),
               ],
             ),
