@@ -72,7 +72,6 @@ ThemeData lightTheme = ThemeData(
   iconButtonTheme: IconButtonThemeData(
     style: IconButton.styleFrom(
       backgroundColor: COLOR_BUTTONS_LIGHT,
-      
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(

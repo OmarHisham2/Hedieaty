@@ -49,18 +49,6 @@ class EventListScreen extends StatelessWidget {
                       style: textTheme.titleLarge!.copyWith(fontSize: 25),
                     ),
                   ),
-                  EventItem(
-                    event: Event(
-                        name: 'Emad\'s Birthday eeqwewqewqe',
-                        category: Category.birthday,
-                        status: Status.Current),
-                  ),
-                  EventItem(
-                    event: Event(
-                        name: 'Emad\'s Birthday Party',
-                        category: Category.birthday,
-                        status: Status.Current),
-                  ),
                 ],
               ),
             ),

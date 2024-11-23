@@ -16,6 +16,10 @@ class HomeScreen extends StatelessWidget {
     TextTheme textTheme = Theme.of(context).textTheme;
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
+    void NavigateToScreen(String routeName) {
+      Navigator.of(context).pushNamed('/$routeName');
+    }
+
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -58,7 +62,10 @@ class HomeScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      const GoodCard(
+                      GoodCard(
+                        onClick: () {
+                          NavigateToScreen('myevents');
+                        },
                         text: 'My Events',
                         subText: '3',
                       ),
@@ -98,36 +105,14 @@ class HomeScreen extends StatelessWidget {
                 UserItem(
                   userData: User(
                       name: 'Omar',
-                      createdEvents: [
-                        Event(
-                            name: 'name',
-                            category: Category.birthday,
-                            status: Status.Current),
-                      ],
+                      createdEvents: [],
                       pledgedGifts: [],
                       phoneNumber: '0121477522'),
                 ),
                 UserItem(
                   userData: User(
                       name: 'Emad',
-                      createdEvents: [
-                        Event(
-                            name: 'name',
-                            category: Category.birthday,
-                            status: Status.Current),
-                        Event(
-                            name: 'yes',
-                            category: Category.birthday,
-                            status: Status.Current),
-                        Event(
-                            name: 'wow',
-                            category: Category.birthday,
-                            status: Status.Current),
-                        Event(
-                            name: 'alright',
-                            category: Category.birthday,
-                            status: Status.Current),
-                      ],
+                      createdEvents: [],
                       pledgedGifts: [],
                       phoneNumber: '0100500522'),
                 ),

@@ -45,7 +45,6 @@ class EventScreen extends StatelessWidget {
                     style: textTheme.titleLarge!.copyWith(fontSize: 25),
                   ),
                 ),
-                const EventItem()
               ],
             ),
           ),

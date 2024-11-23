@@ -1,3 +1,4 @@
+import 'package:hedieaty2/data_models/gift.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
@@ -14,6 +15,9 @@ class Event {
   final String name;
   final Category category;
   final Status status;
+  final DateTime date;
+  final List<Gift> giftList;
 
-  Event({required this.name, required this.category, required this.status});
+  Event(this.giftList, this.date,
+      {required this.name, required this.category, required this.status});
 }

@@ -56,6 +56,11 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Hedieaty',
+        routes: {
+          '/home': (context) => const HomeScreen(),
+          '/profile': (context) => const ProfileScreen(),
+          '/myevents': (context) => const MyEventList(),
+        },
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: ThemeMode.system,
@@ -73,21 +78,23 @@ class _MyAppState extends State<MyApp> {
                   ),
                   style: IconButton.styleFrom(
                       backgroundColor: Colors.transparent,
-                      foregroundColor: isDark ? Colors.white : Colors.black),
+                      foregroundColor: Theme.of(context).iconTheme.color),
                 ),
                 IconButton(
                   onPressed: () {},
                   icon: const Icon(Icons.settings),
                   style: IconButton.styleFrom(
                       backgroundColor: Colors.transparent,
-                      foregroundColor: isDark ? Colors.white : Colors.black),
+                      foregroundColor: Theme.of(context).iconTheme.color),
                 ),
-                // Switch(
-                //   value: _themeManager.themeMode == ThemeMode.dark,
-                //   onChanged: (newValue) {
-                //     _themeManager.toggleTheme(newValue);
-                //   },
-                // )
+                Switch(
+                  value: _themeManager.themeMode == ThemeMode.dark,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _themeManager.toggleTheme(newValue);
+                    });
+                  },
+                )
               ],
             ),
             body: const HomeScreen()),

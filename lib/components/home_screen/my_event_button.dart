@@ -9,7 +9,13 @@ class GoodCard extends StatelessWidget {
 
   final String subText;
 
-  const GoodCard({required this.text, required this.subText, super.key});
+  final Function onClick;
+
+  const GoodCard(
+      {required this.text,
+      required this.subText,
+      super.key,
+      required this.onClick});
 
   @override
   Widget build(BuildContext context) {
@@ -23,28 +29,31 @@ class GoodCard extends StatelessWidget {
         color: isDark ? COLOR_BOX_BACKGROUND_DARK : COLOR_BOX_BACKGROUND_LIGHT,
         borderRadius: const BorderRadius.all(Radius.circular(30)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(25.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(text, style: textTheme.labelLarge),
-                const Spacer(),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 20,
-                  color: Color.fromARGB(255, 53, 52, 50),
-                )
-              ],
-            ),
-            const Spacer(),
-            Text(
-                textAlign: TextAlign.start,
-                subText,
-                style: textTheme.labelMedium)
-          ],
+      child: InkWell(
+        onTap: () => onClick(),
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(text, style: textTheme.labelLarge),
+                  const Spacer(),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 20,
+                    color: Color.fromARGB(255, 53, 52, 50),
+                  )
+                ],
+              ),
+              const Spacer(),
+              Text(
+                  textAlign: TextAlign.start,
+                  subText,
+                  style: textTheme.labelMedium)
+            ],
+          ),
         ),
       ),
     );
