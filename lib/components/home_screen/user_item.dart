@@ -27,7 +27,7 @@ class UserItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(userData.name),
+              Text(userData.displayName),
               Text('Upcoming Events: ${userData.createdEvents.length}')
             ],
           ),

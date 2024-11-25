@@ -1,19 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hedieaty2/components/events_screen/event_item.dart';
-import 'package:hedieaty2/components/general_components/sort_options.dart';
-import 'package:hedieaty2/components/home_screen/add_event_button.dart';
-import 'package:hedieaty2/components/home_screen/user_item.dart';
-import 'package:hedieaty2/components/my_events_screen/create_event_button.dart';
-import 'package:hedieaty2/components/profile_screen/settings_button.dart';
+import 'package:hedieaty2/components/gift_item.dart';
 import 'package:hedieaty2/data_models/event.dart';
-import 'package:hedieaty2/screens/event_list_screen.dart';
+import 'package:hedieaty2/data_models/gift.dart';
+import 'package:hedieaty2/screens/Intro/login.dart';
+import 'package:hedieaty2/screens/Intro/welcome_screen.dart';
+import 'package:hedieaty2/screens/add_new_gift.dart';
 import 'package:hedieaty2/screens/home_screen.dart';
 import 'package:hedieaty2/screens/my_event_list_screen.dart';
 import 'package:hedieaty2/screens/profile_screen.dart';
 import 'package:hedieaty2/theme/theme_constants.dart';
 import 'package:hedieaty2/theme/theme_manager.dart';
-import 'package:hedieaty2/utils/helper_widgets.dart';
 
 void main() {
   runApp(const MyApp());
@@ -57,48 +53,31 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Hedieaty',
         routes: {
+          // '/signup': (context) => SignUp()
+          '/login': (context) => const LoginScreen(),
           '/home': (context) => const HomeScreen(),
           '/profile': (context) => const ProfileScreen(),
           '/myevents': (context) => const MyEventList(),
+          '/addgift': (context) => AddNewGift()
         },
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: ThemeMode.system,
-        home: Scaffold(
-            appBar: AppBar(
-              title: const Text(
-                'Hedieaty',
-                style: TextStyle(fontSize: 30),
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.person,
-                  ),
-                  style: IconButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      foregroundColor: Theme.of(context).iconTheme.color),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.settings),
-                  style: IconButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      foregroundColor: Theme.of(context).iconTheme.color),
-                ),
-                Switch(
-                  value: _themeManager.themeMode == ThemeMode.dark,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _themeManager.toggleTheme(newValue);
-                    });
-                  },
-                )
-              ],
-            ),
-            body: const HomeScreen()),
+        home: const WelcomeScreen(),
       ),
     );
   }
 }
+/*
+GiftItem(
+            giftDetails: Gift(
+                name: 'iPhone 16',
+                description: 'This is the new iphone',
+                price: 640.20,
+                associatedEvent: Event([], DateTime.now(),
+                    name: 'Omar Birthday',
+                    category: Category.birthday,
+                    status: Status.Current),
+                imageUrl:
+                    'https://www.cellularsales.com/wp-content/uploads/2024/09/iPhone_16_Teal.png',
+                giftCategory: GiftCategory.electronics)*/

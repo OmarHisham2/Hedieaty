@@ -71,8 +71,7 @@ ThemeData lightTheme = ThemeData(
   ),
   iconButtonTheme: IconButtonThemeData(
     style: IconButton.styleFrom(
-      backgroundColor: COLOR_BUTTONS_LIGHT,
-    ),
+        backgroundColor: COLOR_BUTTONS_LIGHT, foregroundColor: Colors.white),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
@@ -119,7 +118,7 @@ ThemeData darkTheme = ThemeData(
         fontWeight: FontWeight.w500,
         fontSize: 60.0),
     titleMedium: GoogleFonts.poppins(
-        color: const Color.fromARGB(61, 255, 255, 255), fontSize: 20.0),
+        color: const Color.fromARGB(255, 255, 255, 255), fontSize: 20.0),
     labelLarge: GoogleFonts.poppins(
       fontSize: 25.0,
       color: const Color.fromARGB(255, 255, 255, 255),
@@ -129,7 +128,7 @@ ThemeData darkTheme = ThemeData(
         fontWeight: FontWeight.w500,
         fontSize: 25.0),
     labelSmall: GoogleFonts.poppins(
-        color: const Color.fromARGB(150, 255, 255, 255),
+        color: const Color.fromARGB(255, 255, 255, 255),
         fontWeight: FontWeight.w500,
         fontSize: 15.0),
   ),
@@ -154,5 +153,11 @@ ThemeData darkTheme = ThemeData(
       foregroundColor: Colors.white,
       textStyle: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w300),
     ),
+  ),
+  dropdownMenuTheme: const DropdownMenuThemeData(
+    inputDecorationTheme: InputDecorationTheme(
+      outlineBorder: BorderSide(color: Colors.white),
+    ),
+    textStyle: TextStyle(color: Colors.white),
   ),
 );

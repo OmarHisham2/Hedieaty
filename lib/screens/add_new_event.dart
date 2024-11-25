@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty2/data_models/event.dart';
+import 'package:hedieaty2/data_models/gift.dart';
 import 'package:hedieaty2/utils/helper_widgets.dart';
 
 class AddNewEvent extends StatelessWidget {
@@ -9,6 +10,7 @@ class AddNewEvent extends StatelessWidget {
   final String _eventName = '';
   Category _selectedCategory = Category.birthday;
   final _selectedDate = '';
+  final List<Gift> giftList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +37,28 @@ class AddNewEvent extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: DropdownButtonFormField(
-                      onChanged: (value) {
-                        _selectedCategory = value!;
-                      },
-                      items: Category.values.map((Category category) {
-                        return DropdownMenuItem<Category>(
-                          value: category,
-                          child: Text(
-                              '${category.name[0].toUpperCase()}${category.name.substring(1)}'),
-                        );
-                      }).toList(),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        border: Border.all(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.transparent),
+                      ),
+                      child: DropdownButtonFormField(
+                        onChanged: (value) {
+                          _selectedCategory = value!;
+                        },
+                        items: Category.values.map((Category category) {
+                          return DropdownMenuItem<Category>(
+                            value: category,
+                            child: Text(
+                                style: Theme.of(context).textTheme.labelSmall,
+                                '${category.name[0].toUpperCase()}${category.name.substring(1)}'),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
                   addHorizontalSpace(25),
@@ -71,7 +84,15 @@ class AddNewEvent extends StatelessWidget {
                       ),
                       addHorizontalSpace(15),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          var giftData = await Navigator.pushNamed<dynamic>(
+                            context,
+                            '/addgift',
+                          );
+                          if (giftData != null) {
+                            giftList.add(giftData);
+                          }
+                        },
                         icon: const Icon(Icons.add),
                       )
                     ],

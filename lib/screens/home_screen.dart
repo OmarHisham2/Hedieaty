@@ -6,141 +6,147 @@ import 'package:hedieaty2/components/home_screen/my_event_button.dart';
 import 'package:hedieaty2/components/home_screen/user_item.dart';
 import 'package:hedieaty2/data_models/event.dart';
 import 'package:hedieaty2/data_models/user.dart';
+import 'package:hedieaty2/theme/theme_manager.dart';
 import 'package:hedieaty2/utils/helper_widgets.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     bool isDark = Theme.of(context).brightness == Brightness.dark;
+    ThemeManager themeManager = ThemeManager();
 
     void NavigateToScreen(String routeName) {
       Navigator.of(context).pushNamed('/$routeName');
     }
 
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-            child: Row(
-              children: [
-                Text(
-                  'Welcome, ',
-                  style: GoogleFonts.poppins(fontSize: 30, color: Colors.grey),
-                ),
-                Text(
-                  'Omar!',
-                  style: GoogleFonts.poppins(
-                      fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-              ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Hedieaty',
+          style: TextStyle(fontSize: 30),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.person,
             ),
+            style: IconButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                foregroundColor: Theme.of(context).iconTheme.color),
           ),
-          const Divider(),
-          Container(
-            margin: const EdgeInsets.fromLTRB(20, 25, 0, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      '5',
-                      style: textTheme.titleLarge,
-                    ),
-                    addHorizontalSpace(10),
-                    Text('Pledged Gifts', style: textTheme.titleMedium),
-                  ],
-                ),
-                addVerticalSpace(20),
-                FittedBox(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GoodCard(
-                        onClick: () {
-                          NavigateToScreen('myevents');
-                        },
-                        text: 'My Events',
-                        subText: '3',
-                      ),
-                      addHorizontalSpace(10),
-                      const AddEventButton(
-                        text: 'Create \nYour Own \nEvent/List',
-                      ),
-                      addHorizontalSpace(20)
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.settings),
+            style: IconButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                foregroundColor: Theme.of(context).iconTheme.color),
           ),
-          Container(
-            margin: const EdgeInsets.fromLTRB(20, 50, 0, 0),
-            child: Row(
-              children: [
-                Text(
-                  'My Contacts',
-                  style: textTheme.titleLarge!.copyWith(fontSize: 25),
-                ),
-                const Spacer(),
-                IconNextToTitleButton(
-                  isDark: isDark,
-                  icon: Icons.search,
-                ),
-                addHorizontalSpace(10)
-              ],
-            ),
-          ),
-          addVerticalSpace(10),
-          Container(
-            margin: const EdgeInsets.fromLTRB(15, 0, 10, 0),
-            child: Column(
-              children: [
-                UserItem(
-                  userData: User(
-                      name: 'Omar',
-                      createdEvents: [],
-                      pledgedGifts: [],
-                      phoneNumber: '0121477522'),
-                ),
-                UserItem(
-                  userData: User(
-                      name: 'Emad',
-                      createdEvents: [],
-                      pledgedGifts: [],
-                      phoneNumber: '0100500522'),
-                ),
-                UserItem(
-                  userData: User(
-                      name: 'The Train Driver',
-                      createdEvents: [],
-                      pledgedGifts: [],
-                      phoneNumber: '012330522'),
-                ),
-                UserItem(
-                  userData: User(
-                      name: 'Some Random Person',
-                      createdEvents: [],
-                      pledgedGifts: [],
-                      phoneNumber: '08877300522'),
-                ),
-                UserItem(
-                  userData: User(
-                      name: 'Lily Chou',
-                      createdEvents: [],
-                      pledgedGifts: [],
-                      phoneNumber: '01063101122'),
-                ),
-              ],
-            ),
+          Switch(
+            value: themeManager.themeMode == ThemeMode.dark,
+            onChanged: (newValue) {
+              setState(() {
+                themeManager.toggleTheme(newValue);
+              });
+            },
           )
         ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+              child: Row(
+                children: [
+                  Text(
+                    'Welcome, ',
+                    style:
+                        GoogleFonts.poppins(fontSize: 30, color: Colors.grey),
+                  ),
+                  Text(
+                    'Omar!',
+                    style: GoogleFonts.poppins(
+                        fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(),
+            Container(
+              margin: const EdgeInsets.fromLTRB(20, 25, 0, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        '5',
+                        style: textTheme.titleLarge,
+                      ),
+                      addHorizontalSpace(10),
+                      Text('Pledged Gifts', style: textTheme.titleMedium),
+                    ],
+                  ),
+                  addVerticalSpace(20),
+                  FittedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GoodCard(
+                          onClick: () {
+                            NavigateToScreen('myevents');
+                          },
+                          text: 'My Events',
+                          subText: '3',
+                        ),
+                        addHorizontalSpace(10),
+                        const AddEventButton(
+                          text: 'Create \nYour Own \nEvent/List',
+                        ),
+                        addHorizontalSpace(20)
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.fromLTRB(20, 50, 0, 0),
+              child: Row(
+                children: [
+                  Text(
+                    'My Contacts',
+                    style: textTheme.titleLarge!.copyWith(fontSize: 25),
+                  ),
+                  const Spacer(),
+                  IconNextToTitleButton(
+                    isDark: isDark,
+                    icon: Icons.search,
+                  ),
+                  addHorizontalSpace(10)
+                ],
+              ),
+            ),
+            addVerticalSpace(10),
+            Container(
+              margin: const EdgeInsets.fromLTRB(15, 0, 10, 0),
+              child: const Column(
+                children: [],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
