@@ -33,7 +33,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 addHorizontalSpace(15),
                 Text(
-                  'Hediaety',
+                  'Hedieaety',
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge!
@@ -80,7 +80,9 @@ class WelcomeScreen extends StatelessWidget {
           SizedBox(
             width: 300,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed('/signup');
+              },
               style: ElevatedButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 20),

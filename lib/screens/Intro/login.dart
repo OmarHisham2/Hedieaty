@@ -21,7 +21,7 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
           Text(
-            'Hedieaty',
+            'Hedieaety',
             style: Theme.of(context).textTheme.titleLarge,
           ),
           addVerticalSpace(5),
@@ -56,7 +56,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     obscureText: true,
                   ),
-                  addVerticalSpace(25),
+                  addVerticalSpace(35),
                   Center(
                       child: ElevatedButton(
                     onPressed: () {},
@@ -66,7 +66,6 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 150, child: Divider()),
           addVerticalSpace(10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

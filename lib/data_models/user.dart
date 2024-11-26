@@ -13,10 +13,12 @@ class User {
   final List<Gift> pledgedGifts;
   final String id;
 
-  User(this.email, this.password,
-      {required this.displayName,
-      required this.phoneNumber,
-      required this.createdEvents,
-      required this.pledgedGifts})
-      : id = uuid.v4();
+  User(
+    this.email,
+    this.password, {
+    required this.displayName,
+    required this.phoneNumber,
+  })  : id = uuid.v4(),
+        createdEvents = [],
+        pledgedGifts = [];
 }

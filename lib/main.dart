@@ -3,6 +3,7 @@ import 'package:hedieaty2/components/gift_item.dart';
 import 'package:hedieaty2/data_models/event.dart';
 import 'package:hedieaty2/data_models/gift.dart';
 import 'package:hedieaty2/screens/Intro/login.dart';
+import 'package:hedieaty2/screens/Intro/sign_up.dart';
 import 'package:hedieaty2/screens/Intro/welcome_screen.dart';
 import 'package:hedieaty2/screens/add_new_gift.dart';
 import 'package:hedieaty2/screens/home_screen.dart';
@@ -53,7 +54,7 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Hedieaty',
         routes: {
-          // '/signup': (context) => SignUp()
+          '/signup': (context) => const RegisterScreen(),
           '/login': (context) => const LoginScreen(),
           '/home': (context) => const HomeScreen(),
           '/profile': (context) => const ProfileScreen(),
