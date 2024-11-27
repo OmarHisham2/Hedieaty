@@ -3,9 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hedieaty2/components/general_components/icon_next_to_title.dart';
 import 'package:hedieaty2/components/home_screen/add_event_button.dart';
 import 'package:hedieaty2/components/home_screen/my_event_button.dart';
-import 'package:hedieaty2/components/home_screen/user_item.dart';
-import 'package:hedieaty2/data_models/event.dart';
-import 'package:hedieaty2/data_models/user.dart';
 import 'package:hedieaty2/theme/theme_manager.dart';
 import 'package:hedieaty2/utils/helper_widgets.dart';
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hedieaty2/components/events_screen/event_item.dart';
 import 'package:hedieaty2/utils/helper_widgets.dart';
 
 class EventScreen extends StatelessWidget {

@@ -8,7 +8,6 @@ class User {
   final String displayName;
   final String email;
   final String password;
-  final String phoneNumber;
   final List<Event> createdEvents;
   final List<Gift> pledgedGifts;
   final String id;
@@ -17,7 +16,6 @@ class User {
     this.email,
     this.password, {
     required this.displayName,
-    required this.phoneNumber,
   })  : id = uuid.v4(),
         createdEvents = [],
         pledgedGifts = [];

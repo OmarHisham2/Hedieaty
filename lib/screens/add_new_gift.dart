@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hedieaty2/data_models/event.dart';
 import 'package:hedieaty2/data_models/gift.dart';
 import 'package:hedieaty2/utils/helper_widgets.dart';
 

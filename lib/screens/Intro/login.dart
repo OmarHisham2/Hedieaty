@@ -1,8 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hedieaty2/firebase/auth.dart';
 import 'package:hedieaty2/utils/helper_widgets.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
+  final _formKey = GlobalKey<FormState>();
+  String? errorMessage = '';
+
+  String _enteredMail = '';
+  String _enteredPassword = '';
+
+  Future<void> _signInWithEmailAndPassword() async {
+    _formKey.currentState!.save();
+    try {
+      await Auth().signInWithEmailAndPassword(
+          email: _enteredMail, password: _enteredPassword);
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +47,13 @@ class LoginScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(25),
             child: Form(
+              key: _formKey,
               child: Column(
                 children: [
                   TextFormField(
+                    onSaved: (value) {
+                      _enteredMail = value ?? '';
+                    },
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         Icons.email,
@@ -45,6 +66,9 @@ class LoginScreen extends StatelessWidget {
                   ),
                   addVerticalSpace(25),
                   TextFormField(
+                    onSaved: (value) {
+                      _enteredPassword = value ?? "";
+                    },
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         Icons.password,
@@ -59,14 +83,19 @@ class LoginScreen extends StatelessWidget {
                   addVerticalSpace(35),
                   Center(
                       child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _signInWithEmailAndPassword,
                     child: const Text('Log In'),
                   ))
                 ],
               ),
             ),
           ),
-          addVerticalSpace(10),
+          addVerticalSpace(5),
+          const SizedBox(
+            width: 150,
+            child: Divider(),
+          ),
+          addVerticalSpace(15),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

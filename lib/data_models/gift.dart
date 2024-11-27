@@ -1,7 +1,4 @@
-import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
-import 'package:hedieaty2/data_models/event.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();

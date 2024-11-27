@@ -1,7 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:hedieaty2/components/gift_item.dart';
-import 'package:hedieaty2/data_models/event.dart';
-import 'package:hedieaty2/data_models/gift.dart';
 import 'package:hedieaty2/screens/Intro/login.dart';
 import 'package:hedieaty2/screens/Intro/sign_up.dart';
 import 'package:hedieaty2/screens/Intro/welcome_screen.dart';
@@ -11,8 +9,10 @@ import 'package:hedieaty2/screens/my_event_list_screen.dart';
 import 'package:hedieaty2/screens/profile_screen.dart';
 import 'package:hedieaty2/theme/theme_constants.dart';
 import 'package:hedieaty2/theme/theme_manager.dart';
-
-void main() {
+ 
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -54,8 +54,8 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Hedieaty',
         routes: {
-          '/signup': (context) => const RegisterScreen(),
-          '/login': (context) => const LoginScreen(),
+          '/signup': (context) => RegisterScreen(),
+          '/login': (context) => LoginScreen(),
           '/home': (context) => const HomeScreen(),
           '/profile': (context) => const ProfileScreen(),
           '/myevents': (context) => const MyEventList(),
