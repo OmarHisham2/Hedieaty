@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty2/database/users_db.dart';
 import 'package:hedieaty2/firebase/auth.dart';
+import 'package:hedieaty2/screens/home_screen.dart';
 import 'package:hedieaty2/utils/helper_widgets.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -10,24 +11,38 @@ class RegisterScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   String? errorMessage = '';
 
-String _enteredName = '';
-   String _enteredMail = '';
-   String _enteredPassword = '';
+  String _enteredName = '';
+  String _enteredMail = '';
+  String _enteredPassword = '';
 
- 
   @override
   Widget build(BuildContext context) {
-     Future<void> _createUserWithEmailAndPassword() async {
-    _formKey.currentState!.save();
-    try {
-      await Auth().createUserWithEmailAndPassword(
-          email: _enteredMail, password: _enteredPassword);
-            await UsersDB().create(name: _enteredName, email: _enteredMail, preferences: '');
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Registration Successful!'),),);
-    } on FirebaseAuthException catch (e) {
-      print(e);
+    Future<void> _createUserWithEmailAndPassword() async {
+      _formKey.currentState!.save();
+      try {
+        await Auth().createUserWithEmailAndPassword(
+            email: _enteredMail, password: _enteredPassword);
+
+        // Setting Display Name
+        Auth().currentUser!.updateDisplayName(_enteredName);
+        await UsersDB()
+            .create(name: _enteredName, email: _enteredMail, preferences: '');
+
+        await Future.delayed(const Duration(seconds: 1));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('Weak password');
+        } else if (e.code == 'email-already-in-use') {
+          print('Account already exists');
+        }
+      }
     }
-  }
 
     return Scaffold(
       body: Padding(
@@ -56,7 +71,7 @@ String _enteredName = '';
               child: Column(
                 children: [
                   TextFormField(
-                    onSaved: (value){
+                    onSaved: (value) {
                       _enteredName = value ?? '';
                     },
                     decoration: InputDecoration(
@@ -71,7 +86,7 @@ String _enteredName = '';
                   ),
                   addVerticalSpace(15),
                   TextFormField(
-                    onSaved: (value){
+                    onSaved: (value) {
                       _enteredMail = value ?? "";
                     },
                     decoration: InputDecoration(
@@ -86,7 +101,7 @@ String _enteredName = '';
                   ),
                   addVerticalSpace(15),
                   TextFormField(
-                    onSaved: (value){
+                    onSaved: (value) {
                       _enteredPassword = value ?? '';
                     },
                     decoration: InputDecoration(

@@ -133,7 +133,7 @@ class AddNewGift extends StatelessWidget {
                   ),
                 ),
               ),
-              const Spacer(),
+              addVerticalSpace(40),
               ElevatedButton(
                 onPressed: () {
                   Gift myGift = _submitResponse();
@@ -141,13 +141,10 @@ class AddNewGift extends StatelessWidget {
                 },
                 child: const Text('Add New Gift'),
               ),
-              addVerticalSpace(15),
+              addVerticalSpace(25),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).brightness == Brightness.dark
-                          ? const Color.fromARGB(144, 163, 58, 58)
-                          : const Color.fromARGB(144, 230, 61, 58),
+                  backgroundColor: Color.fromARGB(203, 83, 81, 81),
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();

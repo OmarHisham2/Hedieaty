@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty2/screens/Intro/login.dart';
 import 'package:hedieaty2/screens/Intro/sign_up.dart';
+import 'package:hedieaty2/screens/Intro/sign_up2.dart';
 import 'package:hedieaty2/screens/Intro/welcome_screen.dart';
 import 'package:hedieaty2/screens/add_new_gift.dart';
 import 'package:hedieaty2/screens/home_screen.dart';
@@ -9,7 +10,7 @@ import 'package:hedieaty2/screens/my_event_list_screen.dart';
 import 'package:hedieaty2/screens/profile_screen.dart';
 import 'package:hedieaty2/theme/theme_constants.dart';
 import 'package:hedieaty2/theme/theme_manager.dart';
- 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -54,6 +55,7 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Hedieaty',
         routes: {
+          '/welcome': (context) => WelcomeScreen(),
           '/signup': (context) => RegisterScreen(),
           '/login': (context) => LoginScreen(),
           '/home': (context) => const HomeScreen(),
@@ -64,7 +66,7 @@ class _MyAppState extends State<MyApp> {
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: ThemeMode.system,
-        home: const WelcomeScreen(),
+        home: const HomeScreen(),
       ),
     );
   }

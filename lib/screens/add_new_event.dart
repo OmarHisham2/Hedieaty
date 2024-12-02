@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty2/components/gift_item.dart';
 import 'package:hedieaty2/data_models/event.dart';
 import 'package:hedieaty2/data_models/gift.dart';
 import 'package:hedieaty2/utils/helper_widgets.dart';
 
-class AddNewEvent extends StatelessWidget {
-  AddNewEvent({super.key});
+class AddNewEvent extends StatefulWidget {
+  const AddNewEvent({super.key});
 
+  @override
+  State<AddNewEvent> createState() => _AddNewEventState();
+}
+
+class _AddNewEventState extends State<AddNewEvent> {
   final String _eventName = '';
   Category _selectedCategory = Category.birthday;
   final _selectedDate = '';
@@ -89,7 +95,9 @@ class AddNewEvent extends StatelessWidget {
                             '/addgift',
                           );
                           if (giftData != null) {
-                            giftList.add(giftData);
+                            setState(() {
+                              giftList.add(giftData);
+                            });
                           }
                         },
                         icon: const Icon(Icons.add),
@@ -107,14 +115,26 @@ class AddNewEvent extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(20),
                 ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ...giftList.map((gift) => GiftItem(
+                            giftDetails: gift,
+                          ))
+                    ],
+                  ),
+                ),
               ),
               addVerticalSpace(20),
               ElevatedButton(
                 onPressed: () {},
                 child: const Text('Add New Event'),
               ),
-              addVerticalSpace(15),
+              addVerticalSpace(25),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(203, 83, 81, 81),
+                ),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

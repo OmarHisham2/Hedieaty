@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hedieaty2/components/general_components/icon_next_to_title.dart';
 import 'package:hedieaty2/components/home_screen/add_event_button.dart';
 import 'package:hedieaty2/components/home_screen/my_event_button.dart';
+import 'package:hedieaty2/firebase/auth.dart';
 import 'package:hedieaty2/theme/theme_manager.dart';
 import 'package:hedieaty2/utils/helper_widgets.dart';
 
@@ -26,13 +27,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           'Hedieaty',
           style: TextStyle(fontSize: 30),
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed('/profile');
+            },
             icon: const Icon(
               Icons.person,
             ),
@@ -41,20 +45,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 foregroundColor: Theme.of(context).iconTheme.color),
           ),
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Auth().signOut();
+              Navigator.pushReplacementNamed(context, '/welcome');
+            },
+            icon: const Icon(Icons.logout),
             style: IconButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 foregroundColor: Theme.of(context).iconTheme.color),
           ),
-          Switch(
-            value: themeManager.themeMode == ThemeMode.dark,
-            onChanged: (newValue) {
-              setState(() {
-                themeManager.toggleTheme(newValue);
-              });
-            },
-          )
         ],
       ),
       body: SingleChildScrollView(
@@ -72,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         GoogleFonts.poppins(fontSize: 30, color: Colors.grey),
                   ),
                   Text(
-                    'Omar!',
+                    Auth().currentUser!.displayName.toString(),
                     style: GoogleFonts.poppins(
                         fontSize: 30, fontWeight: FontWeight.bold),
                   ),

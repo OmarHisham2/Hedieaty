@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty2/firebase/auth.dart';
+import 'package:hedieaty2/screens/home_screen.dart';
 import 'package:hedieaty2/utils/helper_widgets.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -10,19 +11,29 @@ class LoginScreen extends StatelessWidget {
 
   String _enteredMail = '';
   String _enteredPassword = '';
-
-  Future<void> _signInWithEmailAndPassword() async {
-    _formKey.currentState!.save();
-    try {
-      await Auth().signInWithEmailAndPassword(
-          email: _enteredMail, password: _enteredPassword);
-    } on FirebaseAuthException catch (e) {
-      print(e);
-    }
-  }
+  String _enteredDisplayName = '';
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _signInWithEmailAndPassword() async {
+      _formKey.currentState!.save();
+      try {
+        // Email and Password
+        await Auth().signInWithEmailAndPassword(
+            email: _enteredMail, password: _enteredPassword);
+
+        await Future.delayed(const Duration(seconds: 1));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+        );
+      } on FirebaseAuthException catch (e) {
+        print(e);
+      }
+    }
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.fromLTRB(0, 75, 0, 0),

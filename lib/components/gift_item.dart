@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty2/data_models/gift.dart';
 import 'package:hedieaty2/utils/helper_widgets.dart';
@@ -18,14 +19,26 @@ class GiftItem extends StatelessWidget {
             border: Border.all(color: Colors.white),
           ),
           width: double.infinity,
-          height: 150,
+          height: 100,
           child: Row(
             children: [
               addHorizontalSpace(10),
-              Image.network(
-                giftDetails.imageUrl,
-                width: 100,
-                height: 120,
+              CachedNetworkImage(
+                imageUrl: giftDetails.imageUrl,
+                placeholder: (context, url) => Container(
+                  color: Colors.transparent,
+                  height: 100,
+                  width: 100,
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                errorWidget: (context, url, error) => Image.asset(
+                  'assets/images/imageFailed.png',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
               ),
               addHorizontalSpace(10),
               Column(
