@@ -7,8 +7,8 @@ class FriendsDB {
   Future<void> createTable(Database database) async {
     await database.execute("""
       CREATE TABLE IF NOT EXISTS friends (
-        userID INTEGER NOT NULL,
-        friendID INTEGER NOT NULL,
+        userID TEXT NOT NULL,
+        friendID TEXT NOT NULL,
         PRIMARY KEY (userID, friendID),
         FOREIGN KEY (userID) REFERENCES users(ID) ON DELETE CASCADE,
         FOREIGN KEY (friendID) REFERENCES users(ID) ON DELETE CASCADE
@@ -17,8 +17,8 @@ class FriendsDB {
   }
 
   Future<int> addFriend({
-    required int userID,
-    required int friendID,
+    required String userID,
+    required String friendID,
   }) async {
     final database = await DatabaseService().database;
 

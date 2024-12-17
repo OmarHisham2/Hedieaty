@@ -1,6 +1,9 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty2/data/models/gift.dart';
 import 'package:hedieaty2/core/utils/helper_widgets.dart';
+import 'package:hedieaty2/data/repositories/events_db.dart';
+import 'package:hedieaty2/data/repositories/firebase_service.dart';
 import 'package:hedieaty2/data/repositories/gifts_db.dart';
 import 'package:hedieaty2/domain/usecases/add_gift.dart';
 
@@ -152,6 +155,21 @@ class AddNewGift extends StatelessWidget {
                     eventID: eventID,
                     image: _giftURL,
                   );
+
+                  if (await EventsDB().isEventPublished(eventID)) {
+                    FirebaseService().rlAddGiftToEvent(
+                      eventID,
+                      Gift(
+                          name: _giftName,
+                          description: _giftDescription,
+                          price: _giftPrice,
+                          giftStatus: GiftStatus.available,
+                          giftCategory: GiftCategory.electronics,
+                          imageUrl: _giftURL),
+                    );
+                  }
+
+                  Navigator.of(context).pop();
                 },
                 child: const Text('Add New Gift'),
               ),

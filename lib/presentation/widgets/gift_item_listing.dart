@@ -12,7 +12,7 @@ class GiftItemListed extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
@@ -28,8 +28,8 @@ class GiftItemListed extends StatelessWidget {
                     imageUrl: giftDetails.imageUrl!,
                     placeholder: (context, url) => Container(
                       color: Colors.transparent,
-                      height: 100,
-                      width: 100,
+                      height: 25,
+                      width: 25,
                       child: CircularProgressIndicator(
                         color: Theme.of(context).primaryColor,
                       ),

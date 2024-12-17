@@ -16,7 +16,7 @@ class MyEventList extends StatefulWidget {
 }
 
 class _MyEventListState extends State<MyEventList> {
-  late Future<List<Event>> _eventsFuture;
+  Future<List<Event>>? _eventsFuture;
 
   void _fetchEvents() {
     setState(() {
@@ -35,11 +35,10 @@ class _MyEventListState extends State<MyEventList> {
   }
 
   void _navigateToAddEventScreen() async {
-    
     await Navigator.of(context).push(
       MaterialPageRoute(builder: (ctx) => const AddNewEvent()),
     );
-    
+
     _fetchEvents();
   }
 

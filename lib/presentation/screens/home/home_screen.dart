@@ -187,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   showDialog(
                                     context: context,
                                     useSafeArea: true,
-                                    builder: (context) => const AddFriend(),
+                                    builder: (context) =>  AddFriend(currentUserID: _loggedinUserID),
                                   );
                                 },
                                 label: const Text(

@@ -21,6 +21,7 @@ class Event {
   final String description;
   final String userID;
   final List<Gift> giftList;
+  final bool isPublished;
 
   Event({
     required this.id,
@@ -32,9 +33,9 @@ class Event {
     required this.description,
     required this.userID,
     required this.giftList,
+    this.isPublished = false, // Default value for isPublished
   });
 
-  
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -43,6 +44,7 @@ class Event {
       'location': location,
       'description': description,
       'userID': userID,
+      'isPublished': isPublished ? 1 : 0, // Store as integer in DB
     };
   }
 }

@@ -14,7 +14,7 @@ class GiftsDB {
         category TEXT NOT NULL,
         price REAL NOT NULL,
         status TEXT NOT NULL,
-        eventID INTEGER NOT NULL,
+        eventID TEXT NOT NULL,
         image TEXT,
         FOREIGN KEY (eventID) REFERENCES events(ID) ON DELETE CASCADE
       );
@@ -28,11 +28,10 @@ class GiftsDB {
     required double price,
     required String status,
     required String eventID,
-    String? image, 
+    String? image,
   }) async {
     final database = await DatabaseService().database;
 
-    
     return await database.rawInsert("""
       INSERT INTO gifts (name, description, category, price, status, eventID, image)
       VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -42,20 +41,23 @@ class GiftsDB {
   Future<List<Gift>> getGiftsByEventID(String eventID) async {
     final database = await DatabaseService().database;
 
-    
     final List<Map<String, dynamic>> results = await database.query(
       tableName,
       where: 'eventID = ?',
       whereArgs: [eventID],
     );
 
-    
     return results.map((row) {
       return Gift(
         name: row['name'] as String,
         description: row['description'] as String,
         price: row['price'] as double,
         imageUrl: row['image'] as String?,
+        giftStatus: GiftStatus.values.firstWhere(
+          (status) => status.toString() == 'GiftStatus.${row['status']}',
+          orElse: () =>
+              GiftStatus.available, 
+        ),
         giftCategory: GiftCategory.values.firstWhere(
           (category) =>
               category.toString() == 'GiftCategory.${row['category']}',

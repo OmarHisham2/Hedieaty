@@ -2,9 +2,9 @@ import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
 
-enum GiftStatus { available, pledged }
+enum GiftStatus { available, pledged, purchased }
 
-enum GiftCategory { electronics, books }
+enum GiftCategory { electronics, books, na, toys, perfumes }
 
 class Gift {
   final String name;
@@ -15,12 +15,12 @@ class Gift {
   final GiftStatus giftStatus;
   final String id;
 
-  Gift({
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.imageUrl,
-    required this.giftCategory,
-  })  : id = uuid.v4(),
-        giftStatus = GiftStatus.available;
+  Gift(
+      {required this.name,
+      required this.description,
+      required this.price,
+      required this.imageUrl,
+      required this.giftCategory,
+      this.giftStatus = GiftStatus.available})
+      : id = uuid.v4();
 }

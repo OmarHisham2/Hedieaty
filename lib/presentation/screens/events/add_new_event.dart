@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hedieaty2/core/utils/helper_widgets.dart';
 import 'package:hedieaty2/data/models/event.dart';
 import 'package:hedieaty2/data/repositories/events_db.dart';
+import 'package:hedieaty2/data/repositories/firebase_service.dart';
 import 'package:hedieaty2/domain/usecases/add_event.dart';
+import 'package:hedieaty2/presentation/widgets/CheckboxFormField.dart';
 import 'package:hedieaty2/services/auth/auth.dart';
 
 class AddNewEvent extends StatefulWidget {
@@ -19,10 +22,14 @@ class _AddNewEventState extends State<AddNewEvent> {
   DateTime? _selectedDate;
   String _location = '';
   String _description = '';
-  final AddEvent _addEvent = AddEvent(EventsDB()); 
+  bool _isPublished = false;
+  final AddEvent _addEvent = AddEvent(EventsDB());
+  final _rlService = FirebaseService();
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -94,22 +101,51 @@ class _AddNewEventState extends State<AddNewEvent> {
                 decoration: const InputDecoration(label: Text('Description')),
                 onSaved: (value) => _description = value!,
               ),
+              addVerticalSpace(20),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                child: CheckboxFormField(
+                  onSaved: (value) {
+                    _isPublished = value!;
+                  },
+                  title: Text(
+                    'Publish Event? ',
+                    style: GoogleFonts.poppins(
+                        color: isDark ? Colors.white : Color(0xff5a5a58),
+                        fontSize: 20.0),
+                  ),
+                ),
+              ),
               addVerticalSpace(25),
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-
+                    String eventID = uuid.v4();
                     await _addEvent(
-                      name: _eventName,
-                      date: _selectedDate!,
-                      location: _location,
-                      description: _description,
-                      userID: Auth()
-                          .currentUser!
-                          .uid, 
-                      category: _selectedCategory,
-                    );
+                        id: eventID,
+                        name: _eventName,
+                        date: _selectedDate!,
+                        location: _location,
+                        description: _description,
+                        userID: Auth().currentUser!.uid,
+                        category: _selectedCategory,
+                        isPublished: _isPublished);
+
+                    if (_isPublished) {
+                      
+                      _rlService.rlCreateEvent(Event(
+                        name: _eventName,
+                        date: _selectedDate!,
+                        location: _location,
+                        description: _description,
+                        userID: Auth().currentUser!.uid,
+                        category: _selectedCategory,
+                        id: eventID,
+                        status: Status.Current,
+                        giftList: [],
+                      ));
+                    }
 
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(

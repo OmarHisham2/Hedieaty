@@ -11,6 +11,7 @@ class UsersDB {
         name TEXT NOT NULL,
         email TEXT NOT NULL UNIQUE,
         preferences TEXT NOT NULL,
+        phone TEXT NOT NULL,
         image TEXT
       );
     """);
@@ -20,15 +21,16 @@ class UsersDB {
     required String id,
     required String name,
     required String email,
+    required String phone,
     String? preferences,
     String? image,
   }) async {
     final database = await DatabaseService().database;
 
     return await database.rawInsert("""
-      INSERT INTO users (id,name, email, preferences, image)
-      VALUES (?,?, ?, ?, ?)
-    """, [id, name, email, preferences, image]);
+      INSERT INTO users (id,name, email, preferences,phone, image)
+      VALUES (?,?, ?, ?,?, ?)
+    """, [id, name, email, preferences, phone, image]);
   }
 
   Future<List<Map<String, dynamic>>> getAllUsers() async {
