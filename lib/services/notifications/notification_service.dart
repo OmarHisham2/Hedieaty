@@ -119,7 +119,7 @@ class NotificationService {
     return '0';
   }
 
-  
+  // Push Notification Function Using HTTP
 
   Future<void> sendPushNotification({
     required String recipientToken,
@@ -136,12 +136,12 @@ class NotificationService {
 
       final serviceAccountCredentials =
           ServiceAccountCredentials.fromJson(accountCredentials);
-      final scopes = ['https:
+      final scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
       final client =
           await clientViaServiceAccount(serviceAccountCredentials, scopes);
 
       final url = Uri.parse(
-          'https:
+          'https://fcm.googleapis.com/v1/projects/$projectId/messages:send');
 
       final payload = {
         "message": {
@@ -163,8 +163,6 @@ class NotificationService {
         },
         body: json.encode(payload),
       );
-
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 }
