@@ -119,6 +119,7 @@ class RegisterScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     TextFormField(
+                      key: const ValueKey('name_field'),
                       onSaved: (value) {
                         _enteredName = value ?? '';
                       },
@@ -140,6 +141,7 @@ class RegisterScreen extends StatelessWidget {
                     ),
                     addVerticalSpace(15),
                     TextFormField(
+                      key: const ValueKey('email_field'),
                       onSaved: (value) {
                         _enteredMail = value ?? "";
                       },
@@ -161,6 +163,7 @@ class RegisterScreen extends StatelessWidget {
                     ),
                     addVerticalSpace(15),
                     TextFormField(
+                      key: const ValueKey('password_field'),
                       onSaved: (value) {
                         _enteredPassword = value ?? '';
                       },
@@ -183,6 +186,7 @@ class RegisterScreen extends StatelessWidget {
                     ),
                     addVerticalSpace(15),
                     TextFormField(
+                      key: const ValueKey('phone_field'),
                       onSaved: (value) {
                         _enteredPhone = value ?? '';
                       },
@@ -206,6 +210,7 @@ class RegisterScreen extends StatelessWidget {
                     addVerticalSpace(35),
                     Center(
                       child: ElevatedButton(
+                        key: const ValueKey('register_button_2'),
                         onPressed: createUserWithEmailAndPassword,
                         child: const Text('Register'),
                       ),
