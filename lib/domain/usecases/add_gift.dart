@@ -6,6 +6,7 @@ class AddGift {
   AddGift(this.giftsDB);
 
   Future<void> call({
+    required String id,
     required String name,
     required String description,
     required String category,
@@ -15,6 +16,7 @@ class AddGift {
     String? image,
   }) async {
     await giftsDB.create(
+      id: id,
       name: name,
       description: description,
       category: category,

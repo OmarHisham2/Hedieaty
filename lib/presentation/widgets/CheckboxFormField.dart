@@ -5,6 +5,7 @@ import 'package:toggle_switch/toggle_switch.dart';
 
 class CheckboxFormField extends FormField<bool> {
   CheckboxFormField({
+    super.key,
     required Widget title,
     FormFieldSetter<bool>? onSaved,
     FormFieldValidator<bool>? validator,
@@ -19,9 +20,9 @@ class CheckboxFormField extends FormField<bool> {
                   title,
                   addHorizontalSpace(20),
                   ToggleSwitch(
-                    customWidths: [90.0, 50.0],
+                    customWidths: const [90.0, 50.0],
                     cornerRadius: 20.0,
-                    activeBgColors: [
+                    activeBgColors: const [
                       [Colors.green],
                       [Colors.redAccent]
                     ],
@@ -29,8 +30,11 @@ class CheckboxFormField extends FormField<bool> {
                     inactiveBgColor: Colors.grey,
                     inactiveFgColor: Colors.white,
                     totalSwitches: 2,
-                    labels: ['YES', 'NO'],
-                    icons: [FontAwesomeIcons.check, FontAwesomeIcons.times],
+                    labels: const ['YES', 'NO'],
+                    icons: const [
+                      FontAwesomeIcons.check,
+                      FontAwesomeIcons.times
+                    ],
                     initialLabelIndex: state.value == true ? 0 : 1,
                     onToggle: (index) {
                       state.didChange(index == 0);

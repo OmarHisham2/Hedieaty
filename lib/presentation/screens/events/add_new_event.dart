@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hedieaty2/core/utils/helper_widgets.dart';
@@ -61,7 +62,7 @@ class _AddNewEventState extends State<AddNewEvent> {
                         border: Border.all(color: Colors.transparent),
                       ),
                       child: DropdownButtonFormField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           label: Text('Event Category'),
                         ),
                         onChanged: (value) {
@@ -103,7 +104,8 @@ class _AddNewEventState extends State<AddNewEvent> {
               ),
               addVerticalSpace(20),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                 child: CheckboxFormField(
                   onSaved: (value) {
                     _isPublished = value!;
@@ -111,7 +113,7 @@ class _AddNewEventState extends State<AddNewEvent> {
                   title: Text(
                     'Publish Event? ',
                     style: GoogleFonts.poppins(
-                        color: isDark ? Colors.white : Color(0xff5a5a58),
+                        color: isDark ? Colors.white : const Color(0xff5a5a58),
                         fontSize: 20.0),
                   ),
                 ),
@@ -133,7 +135,6 @@ class _AddNewEventState extends State<AddNewEvent> {
                         isPublished: _isPublished);
 
                     if (_isPublished) {
-                      
                       _rlService.rlCreateEvent(Event(
                         name: _eventName,
                         date: _selectedDate!,
@@ -147,11 +148,20 @@ class _AddNewEventState extends State<AddNewEvent> {
                       ));
                     }
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          backgroundColor: Colors.greenAccent,
-                          content: Text('Event added successfully!')),
-                    );
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(const SnackBar(
+                        elevation: 0,
+                        backgroundColor: Colors.transparent,
+                        showCloseIcon: false,
+                        behavior: SnackBarBehavior.floating,
+                        content: AwesomeSnackbarContent(
+                          title: 'Event Created!',
+                          message:
+                              'You have successfully created an event.\n Start Adding Gifts!',
+                          contentType: ContentType.success,
+                        ),
+                      ));
 
                     Navigator.of(context).pop();
                   }

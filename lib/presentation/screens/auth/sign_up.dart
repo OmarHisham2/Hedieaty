@@ -30,7 +30,7 @@ class RegisterScreen extends StatelessWidget {
           );
 
           final user = Auth().currentUser;
-          String _userToken = '0';
+          String userToken = '0';
 
           await user!.updateDisplayName(_enteredName);
 
@@ -38,7 +38,7 @@ class RegisterScreen extends StatelessWidget {
               FirebaseDatabase.instance.ref().child('users').child(user.uid);
 
           await NotificationService().getDeviceToken().then((value) {
-            _userToken = value;
+            userToken = value;
           });
 
           await dbRef.set({
@@ -48,7 +48,7 @@ class RegisterScreen extends StatelessWidget {
             'preferences': '',
             'pledgedGifts': [],
             'events': [],
-            'fcmtoken': _userToken
+            'fcmtoken': userToken
           });
 
           await UsersDB().create(
@@ -70,7 +70,7 @@ class RegisterScreen extends StatelessWidget {
           if (e.code == 'weak-password') {
             errorMessage = 'Weak password';
           } else if (e.code == 'email-already-in-use') {
-            errorMessage = 'Account already exists';
+            errorMessage = 'This E-Mail is already registered!';
           } else {
             errorMessage = 'An error occurred. Please try again.';
           }
@@ -214,11 +214,11 @@ class RegisterScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
+              width: 150,
               child: Divider(
                 color: Colors.grey,
               ),
-              width: 150,
             ),
             addVerticalSpace(15),
             Row(

@@ -71,7 +71,10 @@ ThemeData lightTheme = ThemeData(
   ),
   iconButtonTheme: IconButtonThemeData(
     style: IconButton.styleFrom(
-        backgroundColor: COLOR_BUTTONS_LIGHT, foregroundColor: Colors.white),
+        backgroundColor: COLOR_BUTTONS_LIGHT,
+        foregroundColor: Colors.white,
+        disabledBackgroundColor: const Color.fromARGB(86, 230, 61, 58),
+        disabledForegroundColor: Colors.grey),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
@@ -145,8 +148,10 @@ ThemeData darkTheme = ThemeData(
   ),
   iconButtonTheme: IconButtonThemeData(
     style: IconButton.styleFrom(
-      backgroundColor: COLOR_ACCENT_DARK,
-    ),
+        backgroundColor: COLOR_ACCENT_DARK,
+        foregroundColor: Colors.white,
+        disabledBackgroundColor: const Color.fromARGB(107, 163, 58, 58),
+        disabledForegroundColor: Colors.grey),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(

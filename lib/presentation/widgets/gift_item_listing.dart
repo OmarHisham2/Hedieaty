@@ -4,9 +4,15 @@ import 'package:hedieaty2/data/models/gift.dart';
 import 'package:hedieaty2/core/utils/helper_widgets.dart';
 
 class GiftItemListed extends StatelessWidget {
-  GiftItemListed({super.key, required this.giftDetails});
+  GiftItemListed(
+      {super.key,
+      required this.giftDetails,
+      required this.onDelete,
+      required this.onPublish});
 
   Gift giftDetails;
+  VoidCallback onDelete;
+  VoidCallback onPublish;
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +24,11 @@ class GiftItemListed extends StatelessWidget {
             borderRadius: BorderRadius.circular(25),
           ),
           width: double.infinity,
-          height: 100,
+          height: 120,
           child: Column(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   addHorizontalSpace(10),
                   CachedNetworkImage(
@@ -56,18 +63,6 @@ class GiftItemListed extends StatelessWidget {
                                 .copyWith(fontWeight: FontWeight.bold),
                           ),
                           addHorizontalSpace(20),
-                          Container(
-                            height: 10.0,
-                            width: 10.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color:
-                                  giftDetails.giftStatus == GiftStatus.available
-                                      ? Colors.greenAccent
-                                      : Colors.redAccent,
-                            ),
-                            child: SizedBox(),
-                          ),
                         ],
                       ),
                       Text('\$${giftDetails.price.toString()}'),
@@ -76,9 +71,25 @@ class GiftItemListed extends StatelessWidget {
                     ],
                   ),
                   const Spacer(),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.delete),
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: giftDetails.isPublished ? null : onPublish,
+                        icon: const Icon(Icons.upload),
+                      ),
+                      SizedBox(
+                        width: 15,
+                        child: Divider(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.grey,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: onDelete,
+                        icon: const Icon(Icons.delete),
+                      ),
+                    ],
                   ),
                   addHorizontalSpace(20),
                 ],

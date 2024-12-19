@@ -14,27 +14,32 @@ class AddNewGift extends StatelessWidget {
   String _giftURL = '';
   String _giftDescription = '';
 
+  final String _giftID = uuid.v4();
   final String eventID;
+  final bool isPublished;
 
   final _formKey = GlobalKey<FormState>();
 
   final AddGift _addGift = AddGift(GiftsDB());
 
-  AddNewGift({super.key, required this.eventID});
+  AddNewGift({super.key, required this.eventID, required this.isPublished});
 
   Gift _addNewGift() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
       return Gift(
-        name: _giftName,
-        price: _giftPrice,
-        description: _giftDescription,
-        imageUrl: _giftURL,
-        giftCategory: _giftCategory,
-      );
+          id: _giftID,
+          name: _giftName,
+          price: _giftPrice,
+          description: _giftDescription,
+          imageUrl: _giftURL,
+          giftCategory: _giftCategory,
+          giftStatus: GiftStatus.available,
+          pledgerID: '');
     } else {
       return Gift(
+          id: 'null',
           name: 'null',
           description: 'null',
           price: 0,
@@ -147,6 +152,7 @@ class AddNewGift extends StatelessWidget {
                 onPressed: () async {
                   _formKey.currentState!.save();
                   await _addGift(
+                    id: _giftID,
                     name: _giftName,
                     description: _giftDescription,
                     category: _giftCategory.toString(),
@@ -156,20 +162,7 @@ class AddNewGift extends StatelessWidget {
                     image: _giftURL,
                   );
 
-                  if (await EventsDB().isEventPublished(eventID)) {
-                    FirebaseService().rlAddGiftToEvent(
-                      eventID,
-                      Gift(
-                          name: _giftName,
-                          description: _giftDescription,
-                          price: _giftPrice,
-                          giftStatus: GiftStatus.available,
-                          giftCategory: GiftCategory.electronics,
-                          imageUrl: _giftURL),
-                    );
-                  }
-
-                  Navigator.of(context).pop();
+                  Navigator.pop(context, true);
                 },
                 child: const Text('Add New Gift'),
               ),

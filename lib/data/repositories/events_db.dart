@@ -1,5 +1,4 @@
 import 'package:hedieaty2/data/models/event.dart';
-import 'package:hedieaty2/data/models/gift.dart';
 import 'package:hedieaty2/data/repositories/database_service.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -28,7 +27,7 @@ class EventsDB {
     required String location,
     required String description,
     required String userID,
-    bool isPublished = false, 
+    bool isPublished = false,
   }) async {
     final database = await DatabaseService().database;
 
@@ -53,17 +52,23 @@ class EventsDB {
       return Event(
         id: row['ID'].toString(),
         name: row['name'] as String,
-        category:
-            Category.birthday, 
+        category: Category.birthday,
         status: _determineStatus(date),
         date: date,
         location: row['location'] as String,
         description: row['description'] as String,
         userID: row['userID'] as String,
-        giftList: [], 
-        isPublished: (row['isPublished'] as int) == 1, 
+        giftList: [],
+        isPublished: (row['isPublished'] as int) == 1,
       );
     }).toList();
+  }
+
+  Future<int> getCreatedEventsCount(String userId) async {
+    final db = await DatabaseService().database;
+    final result = await db
+        .rawQuery('SELECT COUNT(*) FROM events WHERE userID = ?', [userId]);
+    return Sqflite.firstIntValue(result) ?? 0;
   }
 
   Future<bool> isEventPublished(String eventID) async {
@@ -77,11 +82,9 @@ class EventsDB {
     );
 
     if (results.isEmpty) {
-      
       return false;
     }
 
-    
     return (results.first['isPublished'] as int) == 1;
   }
 
@@ -98,5 +101,31 @@ class EventsDB {
     } else {
       return Status.Current;
     }
+  }
+
+  Future<void> toggleIsPublished(String eventID) async {
+    final database = await DatabaseService().database;
+
+    final List<Map<String, dynamic>> results = await database.query(
+      tableName,
+      columns: ['isPublished'],
+      where: 'ID = ?',
+      whereArgs: [eventID],
+    );
+
+    if (results.isEmpty) {
+      throw Exception("Event with ID $eventID not found.");
+    }
+
+    final currentIsPublished = results.first['isPublished'] as int;
+
+    final newIsPublished = currentIsPublished == 1 ? 0 : 1;
+
+    await database.update(
+      tableName,
+      {'isPublished': newIsPublished},
+      where: 'ID = ?',
+      whereArgs: [eventID],
+    );
   }
 }

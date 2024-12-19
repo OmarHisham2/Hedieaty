@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hedieaty2/presentation/widgets/settings_button.dart';
+import 'package:hedieaty2/presentation/screens/extras/my_pledged_gifts_screen.dart';
+import 'package:hedieaty2/presentation/screens/extras/settings.dart';
 import 'package:hedieaty2/services/auth/auth.dart';
 import 'package:hedieaty2/core/utils/helper_widgets.dart';
 
@@ -37,15 +38,47 @@ class ProfileScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SettingsButton(
-                      onpressed: () {},
-                      icon: CupertinoIcons.gift,
-                      label: 'My Pledged Gifts',
+                    TextButton(
+                      onPressed: () => {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (builder) => const MyPledgedGiftsScreen(),
+                          ),
+                        )
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+                        child: Row(
+                          children: [
+                            const Icon(CupertinoIcons.gift),
+                            addHorizontalSpace(20),
+                            const Text('My Pledged Gifts'),
+                            const Spacer(),
+                            const Icon(Icons.arrow_forward_ios)
+                          ],
+                        ),
+                      ),
                     ),
-                    SettingsButton(
-                      onpressed: () {},
-                      icon: Icons.admin_panel_settings,
-                      label: 'Profile Management',
+                    TextButton(
+                      onPressed: () => {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (builder) => const SettingsScreen(),
+                          ),
+                        )
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.settings),
+                            addHorizontalSpace(20),
+                            const Text('App Settings'),
+                            const Spacer(),
+                            const Icon(Icons.arrow_forward_ios)
+                          ],
+                        ),
+                      ),
                     )
                   ],
                 ),

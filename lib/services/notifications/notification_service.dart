@@ -1,14 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart';
 import 'package:googleapis_auth/auth_io.dart';
 
-final _androidChannel = const AndroidNotificationChannel(
+const _androidChannel = AndroidNotificationChannel(
     'high_importance_channel', 'High Importance Notifications',
     description: "This channel is used for important notifications",
     importance: Importance.defaultImportance);
@@ -66,9 +63,7 @@ class NotificationService {
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (payload) async {
-        if (payload != null) {
-          print('Notification Payload: $payload');
-        }
+        print('Notification Payload: $payload');
       },
     );
 
@@ -107,8 +102,8 @@ class NotificationService {
 
   Future<String> getTokenByID(String userID) async {
     await _firebaseMessaging.requestPermission();
-    final _databaseRef = FirebaseDatabase.instance.ref();
-    final snapshot = await _databaseRef.child("users/$userID/fcmtoken").get();
+    final databaseRef = FirebaseDatabase.instance.ref();
+    final snapshot = await databaseRef.child("users/$userID/fcmtoken").get();
 
     if (snapshot.exists) {
       final FCMToken = snapshot.value as String;
@@ -124,16 +119,16 @@ class NotificationService {
     return '0';
   }
 
-  // Push Notification Function Using HTTP
+  
 
   Future<void> sendPushNotification({
     required String recipientToken,
     required String title,
     required String body,
   }) async {
-    const String _projectId = 'hedieaety';
+    const String projectId = 'hedieaety';
 
-    const String _serviceAccountKeyPath =
+    const String serviceAccountKeyPath =
         'assets/services/hedieaety-firebase-adminsdk-aan55-a79f9a3859.json';
     try {
       final accountCredentials = json.decode(await rootBundle.loadString(
@@ -141,12 +136,12 @@ class NotificationService {
 
       final serviceAccountCredentials =
           ServiceAccountCredentials.fromJson(accountCredentials);
-      final scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
+      final scopes = ['https:
       final client =
           await clientViaServiceAccount(serviceAccountCredentials, scopes);
 
       final url = Uri.parse(
-          'https://fcm.googleapis.com/v1/projects/$_projectId/messages:send');
+          'https:
 
       final payload = {
         "message": {
@@ -169,10 +164,7 @@ class NotificationService {
         body: json.encode(payload),
       );
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
     } catch (e) {
-      print('Error sending push notification: $e');
     }
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty2/services/auth/auth.dart';
 import 'package:hedieaty2/presentation/screens/home/home_screen.dart';
 import 'package:hedieaty2/core/utils/helper_widgets.dart';
+import 'package:stylish_dialog/stylish_dialog.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -16,21 +17,43 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<void> signInWithEmailAndPassword() async {
-      _formKey.currentState!.save();
-      try {
-        // Email and Password
-        await Auth().signInWithEmailAndPassword(
-            email: _enteredMail, password: _enteredPassword);
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        try {
+          await Auth().signInWithEmailAndPassword(
+              email: _enteredMail, password: _enteredPassword);
 
-        await Future.delayed(const Duration(seconds: 1));
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-        );
-      } on FirebaseAuthException catch (e) {
-        print(e);
+          await Future.delayed(const Duration(seconds: 1));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            ),
+          );
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'user-not-found') {
+            errorMessage = 'No user found for that email.';
+          } else if (e.code == 'wrong-password') {
+            errorMessage = 'Wrong password provided for that user.';
+          } else if (e.code == 'invalid-email') {
+            errorMessage = 'The email address is not valid.';
+          } else if (e.code == 'invalid-credential') {
+            errorMessage =
+                'Incorrect E-Mail and Password Combination\nTry again.';
+          }
+
+          StylishDialog dialog = StylishDialog(
+            context: context,
+            alertType: StylishDialogType.ERROR,
+            style: DefaultStyle(
+                backgroundColor: Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xff151515)
+                    : Colors.white),
+            title: const Text('Incorrect Credentials'),
+            content: Text(errorMessage!),
+          );
+          dialog.show();
+        }
       }
     }
 
@@ -65,6 +88,12 @@ class LoginScreen extends StatelessWidget {
                     onSaved: (value) {
                       _enteredMail = value ?? '';
                     },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter an email';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         Icons.email,
@@ -79,6 +108,12 @@ class LoginScreen extends StatelessWidget {
                   TextFormField(
                     onSaved: (value) {
                       _enteredPassword = value ?? "";
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a password';
+                      }
+                      return null;
                     },
                     decoration: InputDecoration(
                       prefixIcon: Icon(
@@ -125,6 +160,24 @@ class LoginScreen extends StatelessWidget {
           ),
           addVerticalSpace(90)
         ]),
+      ),
+    );
+  }
+
+  void showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Login Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+            child: const Text('Okay'),
+          ),
+        ],
       ),
     );
   }

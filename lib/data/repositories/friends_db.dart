@@ -22,21 +22,24 @@ class FriendsDB {
   }) async {
     final database = await DatabaseService().database;
 
-    
     return await database.rawInsert("""
       INSERT INTO friends (userID, friendID)
       VALUES (?, ?)
     """, [userID, friendID]);
   }
 
-  Future<List<Map<String, dynamic>>> getFriends(String userID) async {
+  Future<List<String>> getFriends(String userID) async {
     final database = await DatabaseService().database;
 
-    
-    return await database.rawQuery("""
-      SELECT * FROM friends
-      WHERE userID = ?
-    """, [userID]);
+    List<Map<String, dynamic>> result = await database.rawQuery("""
+    SELECT friendID FROM friends
+    WHERE userID = ?
+  """, [userID]);
+
+    List<String> friendIDs =
+        result.map((friend) => friend['friendID'] as String).toList();
+
+    return friendIDs;
   }
 
   Future<int> removeFriend({
@@ -45,7 +48,6 @@ class FriendsDB {
   }) async {
     final database = await DatabaseService().database;
 
-    
     return await database.rawDelete("""
       DELETE FROM friends
       WHERE userID = ? AND friendID = ?

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty2/data/models/event.dart';
 import 'package:hedieaty2/core/utils/helper_widgets.dart';
 
-
 const COLOR_BOX_BACKGROUND_LIGHT = Color(0xffe73a39);
 const COLOR_BOX_BACKGROUND_DARK = Color.fromARGB(255, 163, 58, 58);
 
@@ -16,7 +15,7 @@ class EventItem extends StatelessWidget {
     TextTheme textTheme = Theme.of(context).textTheme;
 
     return Container(
-      height: 200,
+      height: 210,
       width: double.infinity,
       margin: const EdgeInsets.fromLTRB(10, 10, 20, 10),
       decoration: BoxDecoration(
@@ -62,10 +61,12 @@ class EventItem extends StatelessWidget {
                     style: textTheme.labelMedium?.copyWith(color: Colors.white),
                   ),
                 ),
-                addVerticalSpace(5),
+                addVerticalSpace(10),
                 Text(
-                  'Unpledged Gifts: 5',
-                  style: textTheme.labelSmall?.copyWith(),
+                  'Date: ${event.date.day}-${event.date.month}-${event.date.year}',
+                  style: textTheme.labelSmall?.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),

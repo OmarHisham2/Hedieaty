@@ -5,7 +5,7 @@ import 'package:hedieaty2/services/Users/UserService.dart';
 import 'package:hedieaty2/services/notifications/notification_service.dart';
 
 class AddFriend extends StatefulWidget {
-  final String currentUserID; 
+  final String currentUserID;
 
   const AddFriend({super.key, required this.currentUserID});
 
@@ -31,20 +31,16 @@ class _AddFriendState extends State<AddFriend> {
     }
 
     try {
-      
       final userMap = await _userService.fetchUserByPhone(_enteredPhone);
 
       if (userMap != null) {
-        final friendID =
-            userMap['id']; 
+        final friendID = userMap['id'];
 
-        
         await FriendsDB().addFriend(
           userID: widget.currentUserID,
           friendID: friendID,
         );
 
-        
         setState(() {
           _errorMessage = null;
         });
@@ -55,7 +51,7 @@ class _AddFriendState extends State<AddFriend> {
             recipientToken: await NotificationService().getTokenByID(friendID),
             title: 'Friend Notification',
             body: 'Someone has added you as a friend!');
-        Navigator.pop(context); 
+        Navigator.pop(context);
       } else {
         setState(() {
           _errorMessage = "No user found with this phone number.";
@@ -97,6 +93,7 @@ class _AddFriendState extends State<AddFriend> {
                   decoration: InputDecoration(
                     labelText: 'Phone Number',
                     prefixIcon: const Icon(Icons.phone),
+                    prefixIconColor: Colors.black,
                     errorText: _errorMessage,
                   ),
                   keyboardType: TextInputType.phone,

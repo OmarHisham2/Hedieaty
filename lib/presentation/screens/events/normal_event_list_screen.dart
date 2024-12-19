@@ -1,45 +1,43 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty2/data/models/event.dart';
 import 'package:hedieaty2/data/repositories/events_db.dart';
-import 'package:hedieaty2/presentation/screens/events/event_screen_owner.dart';
+import 'package:hedieaty2/presentation/screens/events/event_screen_normal.dart';
 import 'package:hedieaty2/presentation/widgets/event_item.dart';
 import 'package:hedieaty2/presentation/widgets/sort_options.dart';
-import 'package:hedieaty2/presentation/screens/events/add_new_event.dart';
 import 'package:hedieaty2/core/utils/helper_widgets.dart';
 import 'package:hedieaty2/services/auth/auth.dart';
 
-class MyEventList extends StatefulWidget {
-  const MyEventList({super.key});
+class NormalEventListScreen extends StatefulWidget {
+  const NormalEventListScreen(
+      {super.key, required this.userID, required this.userDisplayName});
+  final String userID;
+  final String userDisplayName;
 
   @override
-  State<MyEventList> createState() => _MyEventListState();
+  State<NormalEventListScreen> createState() => _NormalEventListScreenState();
 }
 
-class _MyEventListState extends State<MyEventList> {
-  Future<List<Event>>? _eventsFuture;
-
-  void _fetchEvents() {
-    setState(() {
-      try {
-        _eventsFuture = EventsDB().getEventsByUserID(Auth().currentUser!.uid);
-      } catch (e) {
-        print('Failed to get current user events.');
-      }
-    });
-  }
+class _NormalEventListScreenState extends State<NormalEventListScreen> {
+  final DatabaseReference _eventsRef = FirebaseDatabase.instance.ref('events');
+  final List<Event> _events = [];
 
   @override
   void initState() {
-    _fetchEvents();
     super.initState();
-  }
 
-  void _navigateToAddEventScreen() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(builder: (ctx) => const AddNewEvent()),
-    );
-
-    _fetchEvents();
+    _eventsRef
+        .orderByChild('userID')
+        .equalTo(widget.userID)
+        .onChildAdded
+        .listen((event) {
+      final eventData = event.snapshot.value as Map<dynamic, dynamic>;
+      Event newEvent = Event.fromMap(eventData);
+      newEvent.id = event.snapshot.key!;
+      setState(() {
+        _events.add(newEvent);
+      });
+    });
   }
 
   @override
@@ -73,7 +71,7 @@ class _MyEventListState extends State<MyEventList> {
                     addVerticalSpace(15),
                     FittedBox(
                       child: Text(
-                        'My Event List',
+                        '${widget.userDisplayName[0].toUpperCase() + widget.userDisplayName.substring(1)}\'s Event List',
                         style: textTheme.labelMedium!.copyWith(fontSize: 40),
                       ),
                     ),
@@ -94,13 +92,6 @@ class _MyEventListState extends State<MyEventList> {
                             style: textTheme.titleLarge!.copyWith(fontSize: 25),
                           ),
                           addHorizontalSpace(10),
-                          IconButton(
-                            onPressed: _navigateToAddEventScreen,
-                            icon: const Icon(
-                              Icons.add,
-                              color: Colors.white,
-                            ),
-                          ),
                           const Spacer(),
                         ],
                       ),
@@ -119,49 +110,29 @@ class _MyEventListState extends State<MyEventList> {
                     ),
                     Container(
                       margin: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                      child: FutureBuilder<List<Event>>(
-                        future: _eventsFuture,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
+                      child: _events.isEmpty
+                          ? const Center(
                               child: CircularProgressIndicator(),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Center(
-                              child: Text('Error: ${snapshot.error}'),
-                            );
-                          } else if (!snapshot.hasData ||
-                              snapshot.data!.isEmpty) {
-                            return const Center(
-                              child: Text('No Events Found!'),
-                            );
-                          } else {
-                            final events = snapshot.data!;
-                            return ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: events.length,
-                                itemBuilder: (context, index) {
-                                  final event = events[index];
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (ctx) => EventScreenOwner(
-                                            eventDetails: event,
-                                          ),
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: _events.length,
+                              itemBuilder: (context, index) {
+                                final event = _events[index];
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (ctx) => EventScreenNormal(
+                                          eventDetails: event,
                                         ),
-                                      );
-
-                                      _fetchEvents();
-                                    },
-                                    child: EventItem(event: event),
-                                  );
-                                });
-                          }
-                        },
-                      ),
+                                      ),
+                                    );
+                                  },
+                                  child: EventItem(event: event),
+                                );
+                              }),
                     ),
                   ],
                 ),
