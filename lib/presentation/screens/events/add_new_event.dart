@@ -64,13 +64,14 @@ class _AddNewEventState extends State<AddNewEvent> {
           child: Column(
             children: [
               TextFormField(
+                key: const ValueKey('event_title'),
                 decoration: const InputDecoration(label: Text('Event Name')),
                 onSaved: (value) => _eventName = value!,
                 validator: (value) =>
                     value!.isEmpty ? 'Event name is required' : null,
                 maxLength: 25,
               ),
-              addVerticalSpace(20),
+              addVerticalSpace(10),
               Row(
                 children: [
                   Expanded(
@@ -80,6 +81,7 @@ class _AddNewEventState extends State<AddNewEvent> {
                         border: Border.all(color: Colors.transparent),
                       ),
                       child: DropdownButtonFormField(
+                        key: const ValueKey('event_category_dropdown'),
                         decoration: const InputDecoration(
                           label: Text('Event Category'),
                         ),
@@ -114,6 +116,7 @@ class _AddNewEventState extends State<AddNewEvent> {
               ),
               addVerticalSpace(20),
               TextFormField(
+                key: const ValueKey('event_location'),
                 decoration: const InputDecoration(label: Text('Location')),
                 onSaved: (value) => _location = value!,
                 validator: (value) =>
@@ -121,6 +124,7 @@ class _AddNewEventState extends State<AddNewEvent> {
               ),
               addVerticalSpace(20),
               TextFormField(
+                key: const ValueKey('event_description'),
                 decoration: const InputDecoration(label: Text('Description')),
                 onSaved: (value) => _description = value!,
                 validator: (value) =>
@@ -145,6 +149,7 @@ class _AddNewEventState extends State<AddNewEvent> {
               ),
               addVerticalSpace(25),
               ElevatedButton(
+                key: const ValueKey('add_new_event_button'),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();

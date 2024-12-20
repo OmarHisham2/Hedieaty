@@ -13,7 +13,9 @@ class WelcomeScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: Image.asset(
-              'assets/animatedIcons/gift.gif',
+              Theme.of(context).brightness == Brightness.dark
+                  ? 'assets/animatedIcons/giftDark.gif'
+                  : 'assets/animatedIcons/gift.gif',
               width: 250,
               height: 250,
             ),
@@ -66,6 +68,7 @@ class WelcomeScreen extends StatelessWidget {
           SizedBox(
             width: 300,
             child: ElevatedButton(
+              key: const ValueKey('login_button'),
               onPressed: () {
                 Navigator.of(context).pushNamed('/login');
               },

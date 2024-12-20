@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty2/data/models/event.dart';
 import 'package:hedieaty2/data/repositories/events_db.dart';
@@ -53,7 +54,6 @@ class _ManageEventsScreenState extends State<ManageEventsScreen> {
           SnackBar(
             elevation: 0,
             backgroundColor: Colors.transparent,
-            showCloseIcon: false,
             behavior: SnackBarBehavior.floating,
             content: AwesomeSnackbarContent(
               title: 'Cannot Delete Event',
@@ -74,11 +74,51 @@ class _ManageEventsScreenState extends State<ManageEventsScreen> {
     }
 
     try {
+      if (isPublished) {
+        final DatabaseReference ref =
+            FirebaseDatabase.instance.ref("events/$eventId");
+        final DataSnapshot snapshot = await ref.get();
+
+        if (snapshot.exists) {
+          final data = snapshot.value as Map<dynamic, dynamic>;
+          final userId = data['userID'];
+
+          if (userId == widget.userId) {
+            await ref.remove();
+          } else {
+            throw Exception("Unauthorized to delete this event.");
+          }
+        } else {
+          throw Exception("Event not found in Realtime Database.");
+        }
+      }
+
       await _eventsDB.deleteEvent(eventId);
       _fetchEvents();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Event deleted successfully!")),
-      );
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            showCloseIcon: false,
+            behavior: SnackBarBehavior.floating,
+            content: AwesomeSnackbarContent(
+              title: 'Event Deleted!',
+              message: 'The event has been deleted successfully.',
+              titleTextStyle: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+              messageTextStyle: Theme.of(context)
+                  .textTheme
+                  .titleSmall!
+                  .copyWith(color: Colors.black, fontWeight: FontWeight.w500),
+              contentType: ContentType.success,
+            ),
+          ),
+        );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to delete event: $e")),
@@ -137,19 +177,56 @@ class _ManageEventsScreenState extends State<ManageEventsScreen> {
             itemBuilder: (context, index) {
               final event = events[index];
               return EventItemManaged(
-                event: event,
-                onDelete: () =>
-                    deleteEventCallback(event.id, event.isPublished),
-                onEdit: () => Navigator.of(context)
-                    .push(
-                      MaterialPageRoute(
-                        builder: (builder) => EditEventScreen(
-                          event: event,
-                        ),
-                      ),
-                    )
-                    .then((value) => _fetchEvents()),
-              );
+                  event: event,
+                  onDelete: () =>
+                      deleteEventCallback(event.id, event.isPublished),
+                  onEdit: () async => {
+                        if (event.isPublished ||
+                            await InternetConnection().hasInternetAccess)
+                          {
+                            Navigator.of(context)
+                                .push(
+                                  MaterialPageRoute(
+                                    builder: (builder) => EditEventScreen(
+                                      event: event,
+                                    ),
+                                  ),
+                                )
+                                .then((value) => _fetchEvents())
+                          }
+                        else
+                          {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  elevation: 0,
+                                  backgroundColor: Colors.transparent,
+                                  showCloseIcon: false,
+                                  behavior: SnackBarBehavior.floating,
+                                  content: AwesomeSnackbarContent(
+                                    titleTextStyle: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                    messageTextStyle: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500),
+                                    title:
+                                        'Cannot Edit Published Event While Offline!',
+                                    message:
+                                        'You have to be online to edit a published event.',
+                                    contentType: ContentType.warning,
+                                  ),
+                                ),
+                              )
+                          }
+                      });
             },
           );
         },

@@ -85,8 +85,10 @@ flutter:
     - assets/images/party.png
     - assets/images/eventUpcoming.png
     - assets/images/iphone.png
+    - assets/images/invalidGift.png
     - assets/images/imageFailed.png
     - assets/animatedIcons/gift.gif
+    - assets/animatedIcons/giftDark.gif
     - assets/services/hedieaety-firebase-adminsdk-aan55-a79f9a3859.json
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see

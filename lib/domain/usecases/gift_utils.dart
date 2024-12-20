@@ -1,7 +1,20 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:hedieaty2/data/models/gift.dart';
+import 'package:image_picker/image_picker.dart';
 
 class GiftUtils {
+  pickImage(ImageSource source) async {
+    final ImagePicker imagePicker = ImagePicker();
+
+    XFile? file = await imagePicker.pickImage(source: source);
+
+    if (file != null) {
+      return await file.readAsBytes();
+    }
+
+    print('No Image was Selected');
+  }
+
   static Future<String> getPledgeInfo(
       {required String eventID, required String giftID}) async {
     try {

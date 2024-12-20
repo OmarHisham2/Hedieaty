@@ -11,6 +11,7 @@ import 'package:hedieaty2/presentation/widgets/frosted_eventData.dart';
 import 'package:hedieaty2/presentation/widgets/gift_item_normal.dart';
 import 'package:hedieaty2/services/auth/auth.dart';
 import 'package:hedieaty2/services/notifications/notification_service.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/intl.dart';
 
 enum GiftFilter { all, pledged, unpledged }
@@ -87,31 +88,58 @@ class _EventScreenNormalState extends State<EventScreenNormal> {
   }
 
   void onPledge(Gift giftDetails) async {
-    try {
-      final DatabaseReference giftRef = FirebaseDatabase.instance
-          .ref('events/${widget.eventDetails.id}/gifts/${giftDetails.id}');
+    if (await InternetConnection().hasInternetAccess) {
+      try {
+        final DatabaseReference giftRef = FirebaseDatabase.instance
+            .ref('events/${widget.eventDetails.id}/gifts/${giftDetails.id}');
 
-      await UsersDB().incrementPledgedGiftsCount(Auth().currentUser!.uid);
+        await UsersDB().incrementPledgedGiftsCount(Auth().currentUser!.uid);
 
-      await giftRef.update({
-        'status': GiftStatus.pledged.name,
-        'pledgerID': Auth().currentUser!.uid
-      });
+        await giftRef.update({
+          'status': GiftStatus.pledged.name,
+          'pledgerID': Auth().currentUser!.uid
+        });
 
-      final ownerID = await getEventOwnerID(widget.eventDetails.id);
+        final ownerID = await getEventOwnerID(widget.eventDetails.id);
 
-      if (ownerID != null) {
-        final recipientToken =
-            await NotificationService().getTokenByID(ownerID);
+        if (ownerID != null) {
+          final recipientToken =
+              await NotificationService().getTokenByID(ownerID);
 
-        await NotificationService().sendPushNotification(
-          recipientToken: recipientToken,
-          title: 'Gift Pledged!',
-          body:
-              'A gift has been pledged in your event: ${widget.eventDetails.name}!',
+          await NotificationService().sendPushNotification(
+            recipientToken: recipientToken,
+            title: 'Gift Pledged!',
+            body:
+                'A gift has been pledged in your event: ${widget.eventDetails.name}!',
+          );
+        }
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            const SnackBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              showCloseIcon: false,
+              behavior: SnackBarBehavior.floating,
+              content: AwesomeSnackbarContent(
+                title: 'Gift Pledged!',
+                message: 'You have successfully pledged this gift!',
+                contentType: ContentType.success,
+              ),
+            ),
+          );
+
+        _fetchPledgedAndParticipantCounts();
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to pledge gift: $e'),
+            duration: const Duration(seconds: 2),
+          ),
         );
       }
-
+    } else {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
@@ -121,25 +149,16 @@ class _EventScreenNormalState extends State<EventScreenNormal> {
             showCloseIcon: false,
             behavior: SnackBarBehavior.floating,
             content: AwesomeSnackbarContent(
-              title: 'Gift Pledged!',
-              message: 'You have successfully pledged this gift!',
-              contentType: ContentType.success,
+              title: 'Failed To Pledge Gift!',
+              message: 'You have to be online to pledge a gift.!',
+              contentType: ContentType.warning,
             ),
           ),
         );
-
-      _fetchPledgedAndParticipantCounts();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to pledge gift: $e'),
-          duration: const Duration(seconds: 2),
-        ),
-      );
     }
   }
 
-  Widget _buildFilterDropdown() {
+  Widget buildFilterDropdown() {
     return DropdownButton<GiftFilter>(
       value: selectedFilter,
       onChanged: (GiftFilter? newFilter) {
@@ -247,7 +266,7 @@ class _EventScreenNormalState extends State<EventScreenNormal> {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: 10),
-                    _buildFilterDropdown(),
+                    buildFilterDropdown(),
                   ],
                 ),
               ),
@@ -373,16 +392,16 @@ class _EventScreenNormalState extends State<EventScreenNormal> {
                           ],
                         ),
                         addVerticalSpace(10),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: filteredGifts.length,
-                          itemBuilder: (context, index) {
-                            final gift = filteredGifts[index];
-                            filteredGifts.isEmpty
-                                ? const Center(
-                                    child: Text('No Gifts Added yet!'),
-                                  )
-                                : Column(
+                        filteredGifts.isEmpty
+                            ? const Center(
+                                child: Text('No Gifts Added yet!'),
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: filteredGifts.length,
+                                itemBuilder: (context, index) {
+                                  final gift = filteredGifts[index];
+                                  return Column(
                                     children: [
                                       GiftItemNormal(
                                         giftDetails: gift,
@@ -394,9 +413,8 @@ class _EventScreenNormalState extends State<EventScreenNormal> {
                                       addVerticalSpace(20),
                                     ],
                                   );
-                            return null;
-                          },
-                        ),
+                                },
+                              )
                       ],
                     );
                   }

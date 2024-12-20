@@ -92,6 +92,7 @@ class RegisterScreen extends StatelessWidget {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(0, 75, 0, 0),
         child: Column(

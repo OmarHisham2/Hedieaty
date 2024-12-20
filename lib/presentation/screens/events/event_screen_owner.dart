@@ -97,38 +97,64 @@ class _EventScreenOwnerState extends State<EventScreenOwner> {
 
     bool userOnline = false;
 
-    void publishEvent() {
-      setState(() {
-        EventsDB().toggleIsPublished(widget.eventDetails.id);
+    void publishEvent() async {
+      if (await InternetConnection().hasInternetAccess) {
+        setState(() {
+          EventsDB().toggleIsPublished(widget.eventDetails.id);
 
-        _isPublished = true;
-        _rlService.rlCreateEvent(Event(
-          name: widget.eventDetails.name,
-          date: widget.eventDetails.date,
-          location: widget.eventDetails.location,
-          description: widget.eventDetails.description,
-          userID: Auth().currentUser!.uid,
-          category: widget.eventDetails.category,
-          id: widget.eventDetails.id,
-          status: widget.eventDetails.status,
-          giftList: [],
-        ));
+          _isPublished = true;
+          _rlService.rlCreateEvent(Event(
+            name: widget.eventDetails.name,
+            date: widget.eventDetails.date,
+            location: widget.eventDetails.location,
+            description: widget.eventDetails.description,
+            userID: Auth().currentUser!.uid,
+            category: widget.eventDetails.category,
+            id: widget.eventDetails.id,
+            status: widget.eventDetails.status,
+            giftList: [],
+          ));
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              const SnackBar(
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                showCloseIcon: false,
+                behavior: SnackBarBehavior.floating,
+                content: AwesomeSnackbarContent(
+                  title: 'Event Published!',
+                  message: 'You have successfully published this event.',
+                  contentType: ContentType.success,
+                ),
+              ),
+            );
+        });
+      } else {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(
-            const SnackBar(
+            SnackBar(
               elevation: 0,
               backgroundColor: Colors.transparent,
               showCloseIcon: false,
               behavior: SnackBarBehavior.floating,
               content: AwesomeSnackbarContent(
-                title: 'Event Published!',
-                message: 'You have successfully published this event.',
-                contentType: ContentType.success,
+                title: 'Cannot Publish Event',
+                message: 'You have to be online to publish an event.',
+                titleTextStyle: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+                messageTextStyle: Theme.of(context)
+                    .textTheme
+                    .titleSmall!
+                    .copyWith(color: Colors.black, fontWeight: FontWeight.w500),
+                contentType: ContentType.warning,
               ),
             ),
           );
-      });
+      }
     }
 
     void publishGift(Gift giftDetails) async {
@@ -231,6 +257,7 @@ class _EventScreenOwnerState extends State<EventScreenOwner> {
                                 ),
                                 addHorizontalSpace(5),
                                 MyCircle(
+                                    key: const ValueKey('event_status'),
                                     color: _isPublished
                                         ? Colors.green
                                         : Colors.red),
@@ -242,6 +269,8 @@ class _EventScreenOwnerState extends State<EventScreenOwner> {
                                 ? const Text('')
                                 : SizedBox(
                                     child: HoldableButton(
+                                      key: const ValueKey(
+                                          'publish_event_button'),
                                       loadingType: LoadingType.edgeLoading,
                                       buttonColor: Colors.transparent,
                                       loadingColor: isDark
@@ -363,7 +392,7 @@ class _EventScreenOwnerState extends State<EventScreenOwner> {
                                             : () {
                                                 ScaffoldMessenger.of(context)
                                                   ..hideCurrentSnackBar()
-                                                  ..showSnackBar(const SnackBar(
+                                                  ..showSnackBar(SnackBar(
                                                     elevation: 0,
                                                     backgroundColor:
                                                         Colors.transparent,
@@ -372,6 +401,26 @@ class _EventScreenOwnerState extends State<EventScreenOwner> {
                                                         .floating,
                                                     content:
                                                         AwesomeSnackbarContent(
+                                                      titleTextStyle: Theme.of(
+                                                              context)
+                                                          .textTheme
+                                                          .titleMedium!
+                                                          .copyWith(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                      messageTextStyle: Theme
+                                                              .of(context)
+                                                          .textTheme
+                                                          .titleSmall!
+                                                          .copyWith(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
                                                       title:
                                                           'Publish Your Event First!',
                                                       message:

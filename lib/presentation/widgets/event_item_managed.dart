@@ -74,42 +74,40 @@ class _EventItemManagedState extends State<EventItemManaged> {
         margin: const EdgeInsets.all(25.0),
         child: Column(
           children: [
-            Flexible(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    widget.event.name,
-                    style: textTheme.labelMedium?.copyWith(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  const Spacer(),
-                  Center(
-                    child: Row(
-                      children: [
-                        MyCircle(
-                          color: widget.event.isPublished
-                              ? Colors.green
-                              : Colors.white,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  widget.event.name,
+                  style: textTheme.labelMedium?.copyWith(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                Center(
+                  child: Row(
+                    children: [
+                      MyCircle(
+                        color: widget.event.isPublished
+                            ? Colors.green
+                            : Colors.white,
+                      ),
+                      addHorizontalSpace(5),
+                      const SizedBox(
+                        height: 10,
+                        child: VerticalDivider(
+                          color: Colors.white,
                         ),
-                        addHorizontalSpace(5),
-                        const SizedBox(
-                          height: 10,
-                          child: VerticalDivider(
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          widget.event.status.name,
-                          style: textTheme.labelSmall
-                              ?.copyWith(color: Colors.white),
-                        )
-                      ],
-                    ),
+                      ),
+                      Text(
+                        widget.event.status.name,
+                        style:
+                            textTheme.labelSmall?.copyWith(color: Colors.white),
+                      )
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             addVerticalSpace(10),
             const Spacer(),

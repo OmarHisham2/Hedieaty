@@ -182,6 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GoodCard(
+                          key: const ValueKey('my_events_button'),
                           onClick: () {
                             Navigator.push(
                               context,

@@ -7,22 +7,33 @@ import 'package:hedieaty2/data/repositories/firebase_service.dart';
 import 'package:hedieaty2/data/repositories/gifts_db.dart';
 import 'package:hedieaty2/domain/usecases/add_gift.dart';
 
-class AddNewGift extends StatelessWidget {
+class AddNewGift extends StatefulWidget {
+  final String eventID;
+  final bool isPublished;
+
+  const AddNewGift(
+      {super.key, required this.eventID, required this.isPublished});
+
+  @override
+  State<AddNewGift> createState() => _AddNewGiftState();
+}
+
+class _AddNewGiftState extends State<AddNewGift> {
   String _giftName = '';
-  GiftCategory _giftCategory = GiftCategory.books;
+
+  GiftCategory _giftCategory = GiftCategory.na;
+
   double _giftPrice = 0;
+
   String _giftURL = '';
+
   String _giftDescription = '';
 
   final String _giftID = uuid.v4();
-  final String eventID;
-  final bool isPublished;
 
   final _formKey = GlobalKey<FormState>();
 
   final AddGift _addGift = AddGift(GiftsDB());
-
-  AddNewGift({super.key, required this.eventID, required this.isPublished});
 
   Gift _addNewGift() {
     if (_formKey.currentState!.validate()) {
@@ -44,7 +55,7 @@ class AddNewGift extends StatelessWidget {
           description: 'null',
           price: 0,
           imageUrl: 'null',
-          giftCategory: GiftCategory.books);
+          giftCategory: _giftCategory);
     }
   }
 
@@ -66,6 +77,13 @@ class AddNewGift extends StatelessWidget {
           child: Column(
             children: [
               TextFormField(
+                key: const ValueKey('gift_name_field'),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter a name for the gift.';
+                  }
+                  return null;
+                },
                 decoration: const InputDecoration(
                   label: Text('Name'),
                 ),
@@ -86,32 +104,55 @@ class AddNewGift extends StatelessWidget {
                                     ? Colors.white
                                     : Colors.transparent),
                       ),
-                      child: DropdownButtonFormField(
-                        hint: Text(
-                          'Select Category',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall!
-                              .copyWith(color: Colors.grey),
-                        ),
-                        onChanged: (value) {
-                          _giftCategory = value!;
-                        },
-                        items: GiftCategory.values
-                            .map((GiftCategory giftCategory) {
-                          return DropdownMenuItem<GiftCategory>(
-                            value: giftCategory,
-                            child: Text(
-                                style: Theme.of(context).textTheme.labelSmall,
-                                '${giftCategory.name[0].toUpperCase()}${giftCategory.name.substring(1)}'),
+                      child: FormField<GiftCategory>(
+                        initialValue: _giftCategory,
+                        builder: (FormFieldState<GiftCategory> state) {
+                          return InputDecorator(
+                            decoration: InputDecoration(
+                              errorText:
+                                  state.hasError ? state.errorText : null,
+                              labelText: 'Category',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<GiftCategory>(
+                                value: state.value,
+                                isDense: true,
+                                onChanged: (GiftCategory? newValue) {
+                                  state.didChange(newValue);
+                                  _giftCategory = newValue!;
+                                },
+                                items: GiftCategory.values
+                                    .map((GiftCategory giftCategory) {
+                                  return DropdownMenuItem<GiftCategory>(
+                                    value: giftCategory,
+                                    child: Text(
+                                      '${giftCategory.name[0].toUpperCase()}${giftCategory.name.substring(1)}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall,
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
                           );
-                        }).toList(),
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please select a category.';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                   ),
                   addHorizontalSpace(25),
                   Expanded(
                     child: TextFormField(
+                      key: const ValueKey('gift_price_field'),
                       onSaved: (value) {
                         _giftPrice = double.tryParse(value!)!;
                       },
@@ -119,6 +160,16 @@ class AddNewGift extends StatelessWidget {
                       decoration: const InputDecoration(
                         label: Text('Price'),
                       ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter a price.';
+                        }
+                        final parsedValue = double.tryParse(value);
+                        if (parsedValue == null || parsedValue <= 0) {
+                          return 'Please enter a valid positive number.';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                 ],
@@ -149,20 +200,23 @@ class AddNewGift extends StatelessWidget {
               ),
               addVerticalSpace(40),
               ElevatedButton(
+                key: const ValueKey('gift_save_button'),
                 onPressed: () async {
-                  _formKey.currentState!.save();
-                  await _addGift(
-                    id: _giftID,
-                    name: _giftName,
-                    description: _giftDescription,
-                    category: _giftCategory.toString(),
-                    price: _giftPrice,
-                    status: "Available",
-                    eventID: eventID,
-                    image: _giftURL,
-                  );
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    await _addGift(
+                      id: _giftID,
+                      name: _giftName,
+                      description: _giftDescription,
+                      category: _giftCategory.toString(),
+                      price: _giftPrice,
+                      status: "Available",
+                      eventID: widget.eventID,
+                      image: _giftURL,
+                    );
 
-                  Navigator.pop(context, true);
+                    Navigator.pop(context, true);
+                  }
                 },
                 child: const Text('Add New Gift'),
               ),

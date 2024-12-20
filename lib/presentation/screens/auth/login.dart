@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hedieaty2/presentation/screens/auth/sign_up.dart';
 import 'package:hedieaty2/services/auth/auth.dart';
 import 'package:hedieaty2/presentation/screens/home/home_screen.dart';
 import 'package:hedieaty2/core/utils/helper_widgets.dart';
@@ -58,6 +59,7 @@ class LoginScreen extends StatelessWidget {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(0, 75, 0, 0),
         child: Column(children: [
@@ -85,6 +87,7 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 children: [
                   TextFormField(
+                    key: const ValueKey('email_field'),
                     onSaved: (value) {
                       _enteredMail = value ?? '';
                     },
@@ -106,6 +109,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   addVerticalSpace(25),
                   TextFormField(
+                    key: const ValueKey('password_field'),
                     onSaved: (value) {
                       _enteredPassword = value ?? "";
                     },
@@ -129,6 +133,7 @@ class LoginScreen extends StatelessWidget {
                   addVerticalSpace(35),
                   Center(
                       child: ElevatedButton(
+                    key: const ValueKey('submit_button'),
                     onPressed: signInWithEmailAndPassword,
                     child: const Text('Log In'),
                   ))
@@ -150,15 +155,21 @@ class LoginScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelSmall!,
               ),
               addHorizontalSpace(5),
-              Text(
-                'Register Now!',
-                style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                    decoration: TextDecoration.underline,
-                    fontWeight: FontWeight.bold),
-              ),
+              InkWell(
+                child: Text(
+                  'Register Now!',
+                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.bold),
+                ),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (builder) => RegisterScreen(),
+                  ),
+                ),
+              )
             ],
           ),
-          addVerticalSpace(90)
         ]),
       ),
     );

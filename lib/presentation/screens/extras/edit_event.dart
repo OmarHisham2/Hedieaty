@@ -120,7 +120,9 @@ class _EditEventScreenState extends State<EditEventScreen> {
                       ),
                       child: DropdownButtonFormField<Category>(
                         decoration: const InputDecoration(
-                          label: Text('Event Category'),
+                          label: Text(
+                            'Event Category',
+                          ),
                         ),
                         value: _selectedCategory,
                         onChanged: (value) {
@@ -132,6 +134,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                           return DropdownMenuItem<Category>(
                             value: category,
                             child: Text(
+                              style: const TextStyle(fontSize: 15),
                               '${category.name[0].toUpperCase()}${category.name.substring(1)}',
                             ),
                           );
@@ -171,6 +174,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
               ),
               addVerticalSpace(25),
               ElevatedButton(
+                key: const ValueKey('edit_event_button'),
                 onPressed: _saveEvent,
                 child: const Text('Save Event'),
               ),

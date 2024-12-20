@@ -61,6 +61,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     TextButton(
+                      key: ValueKey('manage_events_button'),
                       onPressed: () => {
                         Navigator.of(context).push(
                           MaterialPageRoute(

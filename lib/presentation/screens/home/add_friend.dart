@@ -95,13 +95,17 @@ class _AddFriendState extends State<AddFriend> {
               Form(
                 key: _formKey,
                 child: TextFormField(
+                  key: const ValueKey('contact_name_field'),
                   onSaved: (value) {
                     _enteredPhone = value ?? '';
                   },
                   decoration: InputDecoration(
                     labelText: 'Phone Number',
                     prefixIcon: const Icon(Icons.phone),
-                    prefixIconColor: Colors.black,
+                    prefixIconColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
                     errorText: _errorMessage,
                   ),
                   keyboardType: TextInputType.phone,
@@ -109,6 +113,7 @@ class _AddFriendState extends State<AddFriend> {
               ),
               addVerticalSpace(25),
               ElevatedButton(
+                key: const ValueKey('save_contact_button'),
                 onPressed: _addFriend,
                 child: const Text('Add'),
               ),

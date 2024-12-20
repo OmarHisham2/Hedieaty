@@ -112,8 +112,17 @@ class _NormalEventListScreenState extends State<NormalEventListScreen> {
                     Container(
                       margin: const EdgeInsets.fromLTRB(5, 5, 0, 0),
                       child: _events.isEmpty
-                          ? const Center(
-                              child: CircularProgressIndicator(),
+                          ? Center(
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 0),
+                                child: const Text(
+                                  'User Has Not Published Any Events!',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
                             )
                           : ListView.builder(
                               shrinkWrap: true,
