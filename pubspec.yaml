@@ -61,11 +61,17 @@ dependencies:
   zoom_sliver_app_bar: ^0.0.3
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.2
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
   integration_test:
     sdk: flutter
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/appLogo.png"
+  min_sdk_android: 21 # android min sdk mi
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
