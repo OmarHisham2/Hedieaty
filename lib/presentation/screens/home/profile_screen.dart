@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hedieaty2/presentation/screens/extras/manage_events.dart';
 import 'package:hedieaty2/presentation/screens/extras/my_pledged_gifts_screen.dart';
 import 'package:hedieaty2/presentation/screens/extras/settings.dart';
 import 'package:hedieaty2/services/auth/auth.dart';
@@ -53,6 +54,28 @@ class ProfileScreen extends StatelessWidget {
                             const Icon(CupertinoIcons.gift),
                             addHorizontalSpace(20),
                             const Text('My Pledged Gifts'),
+                            const Spacer(),
+                            const Icon(Icons.arrow_forward_ios)
+                          ],
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (builder) => ManageEventsScreen(
+                                userId: Auth().currentUser!.uid),
+                          ),
+                        )
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.event),
+                            addHorizontalSpace(20),
+                            const Text('Manage Events'),
                             const Spacer(),
                             const Icon(Icons.arrow_forward_ios)
                           ],

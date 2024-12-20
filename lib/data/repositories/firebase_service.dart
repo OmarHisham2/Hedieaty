@@ -12,7 +12,9 @@ class FirebaseService {
         "location": event.location,
         "description": event.description,
         "date": event.date.toString(),
-        "userID": event.userID
+        "userID": event.userID,
+        "category": event.category.name,
+        "status": event.status.name
       });
     } catch (e) {
       print('FAILED TO CREATE EVENT');

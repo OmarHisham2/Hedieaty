@@ -15,6 +15,7 @@ import 'package:hedieaty2/presentation/widgets/myCircle.dart';
 import 'package:hedieaty2/services/auth/auth.dart';
 import 'package:holdable_button/holdable_button.dart';
 import 'package:holdable_button/utils/utils.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class EventScreenOwner extends StatefulWidget {
   const EventScreenOwner({super.key, required this.eventDetails});
@@ -47,7 +48,6 @@ class _EventScreenOwnerState extends State<EventScreenOwner> {
           });
         });
 
-        
         _fetchPledgedAndParticipantCounts(eventID);
       } catch (e) {
         print('Failed to get current user gifts.');
@@ -70,7 +70,7 @@ class _EventScreenOwnerState extends State<EventScreenOwner> {
 
         if (pledgerID.isNotEmpty) {
           pledged += 1;
-          uniquePledgerIDs.add(pledgerID); 
+          uniquePledgerIDs.add(pledgerID);
         }
       });
 
@@ -110,13 +110,55 @@ class _EventScreenOwnerState extends State<EventScreenOwner> {
           userID: Auth().currentUser!.uid,
           category: widget.eventDetails.category,
           id: widget.eventDetails.id,
-          status: widget.eventDetails.status, 
+          status: widget.eventDetails.status,
           giftList: [],
         ));
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            const SnackBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              showCloseIcon: false,
+              behavior: SnackBarBehavior.floating,
+              content: AwesomeSnackbarContent(
+                title: 'Event Published!',
+                message: 'You have successfully published this event.',
+                contentType: ContentType.success,
+              ),
+            ),
+          );
       });
     }
 
     void publishGift(Gift giftDetails) async {
+      if (await InternetConnection().hasInternetAccess == false) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              showCloseIcon: false,
+              behavior: SnackBarBehavior.floating,
+              content: AwesomeSnackbarContent(
+                title: 'Cannot Publish Gift',
+                message: 'You have to be online to publish a gift!',
+                titleTextStyle: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+                messageTextStyle: Theme.of(context)
+                    .textTheme
+                    .titleSmall!
+                    .copyWith(color: Colors.black, fontWeight: FontWeight.w500),
+                contentType: ContentType.warning,
+              ),
+            ),
+          );
+
+        return;
+      }
       await GiftsDB().toggleIsPublished(giftDetails.id);
       _rlService.rlAddGiftToEvent(
           widget.eventDetails.id,
@@ -339,8 +381,10 @@ class _EventScreenOwnerState extends State<EventScreenOwner> {
                                                     ),
                                                   ));
                                               },
-                                        onDelete: () => setState(
-                                          () {
+                                        onDelete: () => setState(() async {
+                                          if (widget.eventDetails.isPublished &&
+                                              await InternetConnection()
+                                                  .hasInternetAccess) {
                                             GiftsDB().deleteGiftByID(gift.id);
                                             GiftsDB().deleteGiftFromFB(
                                                 widget.eventDetails.id,
@@ -366,8 +410,55 @@ class _EventScreenOwnerState extends State<EventScreenOwner> {
 
                                             _fetchEventGifts(
                                                 widget.eventDetails.id);
-                                          },
-                                        ),
+                                          } else if (widget
+                                                  .eventDetails.isPublished &&
+                                              await InternetConnection()
+                                                      .hasInternetAccess ==
+                                                  false) {
+                                            ScaffoldMessenger.of(context)
+                                              ..hideCurrentSnackBar()
+                                              ..showSnackBar(
+                                                SnackBar(
+                                                  elevation: 0,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  showCloseIcon: false,
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  content:
+                                                      AwesomeSnackbarContent(
+                                                    title: 'Cannot Delete Gift',
+                                                    message:
+                                                        'You have to be online to delete a gift from a published event.',
+                                                    titleTextStyle: Theme.of(
+                                                            context)
+                                                        .textTheme
+                                                        .titleMedium!
+                                                        .copyWith(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                    messageTextStyle: Theme.of(
+                                                            context)
+                                                        .textTheme
+                                                        .titleSmall!
+                                                        .copyWith(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                    contentType:
+                                                        ContentType.warning,
+                                                  ),
+                                                ),
+                                              );
+                                          } else if (widget
+                                                  .eventDetails.isPublished ==
+                                              false) {
+                                            GiftsDB().deleteGiftByID(gift.id);
+                                          }
+                                        }),
                                       ),
                                       addVerticalSpace(20)
                                     ],

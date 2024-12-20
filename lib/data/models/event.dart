@@ -9,7 +9,7 @@ enum Status {
   Past,
 }
 
-enum Category { birthday, party, conference }
+enum Category { birthday, party, conference, babyshower }
 
 class Event {
   String id;
@@ -36,6 +36,20 @@ class Event {
     this.isPublished = false,
   });
 
+  static Category _parseCategory(String categoryString) {
+    return Category.values.firstWhere(
+      (category) => category.toString().split('.').last == categoryString,
+      orElse: () => Category.party,
+    );
+  }
+
+  static Status _parseStatus(String statusString) {
+    return Status.values.firstWhere(
+      (status) => status.toString().split('.').last == statusString,
+      orElse: () => Status.Current,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -55,8 +69,8 @@ class Event {
     return Event(
       id: '',
       name: map['name'] ?? '',
-      category: Category.birthday,
-      status: Status.Current,
+      category: _parseCategory(map['category']),
+      status: _parseStatus(map['status']),
       date: DateTime.parse(map['date']),
       location: map['location'] ?? '',
       description: map['description'] ?? '',
@@ -65,7 +79,6 @@ class Event {
       isPublished: map['isPublished'] == 1,
     );
   }
-
   static List<Gift> _parseGifts(List<dynamic> gifts) {
     return gifts
         .map((gift) => Gift.fromMap(gift as Map<String, dynamic>))

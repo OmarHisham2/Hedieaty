@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +15,7 @@ import 'package:hedieaty2/presentation/widgets/my_event_button.dart';
 import 'package:hedieaty2/presentation/widgets/user_item.dart';
 import 'package:hedieaty2/services/auth/auth.dart';
 import 'package:hedieaty2/core/utils/helper_widgets.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -148,10 +150,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     style:
                         GoogleFonts.poppins(fontSize: 30, color: Colors.grey),
                   ),
-                  Text(
-                    Auth().currentUser!.displayName.toString(),
-                    style: GoogleFonts.poppins(
-                        fontSize: 30, fontWeight: FontWeight.bold),
+                  FittedBox(
+                    child: Text(
+                      Auth().currentUser!.displayName.toString(),
+                      style: GoogleFonts.poppins(
+                          fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ],
               ),
@@ -298,13 +302,41 @@ class _HomeScreenState extends State<HomeScreen> {
             addVerticalSpace(10),
             Center(
               child: ElevatedButton.icon(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    useSafeArea: true,
-                    builder: (context) =>
-                        AddFriend(currentUserID: _loggedinUserID),
-                  ).then((value) => _loadFriends());
+                onPressed: () async {
+                  if (await InternetConnection().hasInternetAccess) {
+                    showDialog(
+                      context: context,
+                      useSafeArea: true,
+                      builder: (context) =>
+                          AddFriend(currentUserID: _loggedinUserID),
+                    ).then((value) => _loadFriends());
+                  } else {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(SnackBar(
+                        elevation: 0,
+                        backgroundColor: Colors.transparent,
+                        showCloseIcon: false,
+                        behavior: SnackBarBehavior.floating,
+                        content: AwesomeSnackbarContent(
+                          title: 'Cannot Add Friends!',
+                          message: 'You have to be online to add friends.',
+                          titleTextStyle: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                          messageTextStyle: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500),
+                          contentType: ContentType.warning,
+                        ),
+                      ));
+                  }
                 },
                 label: const Text(
                   'Add Friend',

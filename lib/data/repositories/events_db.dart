@@ -14,6 +14,7 @@ class EventsDB {
         location TEXT NOT NULL,
         description TEXT NOT NULL,
         userID INTEGER NOT NULL,
+        category TEXT NOT NULL,
         isPublished INTEGER NOT NULL DEFAULT 0, 
         FOREIGN KEY (userID) REFERENCES users(ID) ON DELETE CASCADE
       );
@@ -27,14 +28,24 @@ class EventsDB {
     required String location,
     required String description,
     required String userID,
+    required String category,
     bool isPublished = false,
   }) async {
     final database = await DatabaseService().database;
 
     return await database.rawInsert("""
-      INSERT INTO events (id,name, date, location, description, userID, isPublished)
-      VALUES (?,?, ?, ?, ?, ?, ?)
-    """, [id, name, date, location, description, userID, isPublished ? 1 : 0]);
+      INSERT INTO events (id,name, date, location, description, userID,category, isPublished)
+      VALUES (?,?, ?, ?, ?, ?,?, ?)
+    """, [
+      id,
+      name,
+      date,
+      location,
+      description,
+      userID,
+      category,
+      isPublished ? 1 : 0
+    ]);
   }
 
   Future<List<Event>> getEventsByUserID(String userID) async {
@@ -52,7 +63,7 @@ class EventsDB {
       return Event(
         id: row['ID'].toString(),
         name: row['name'] as String,
-        category: Category.birthday,
+        category: _parseCategory(row['category'] as String),
         status: _determineStatus(date),
         date: date,
         location: row['location'] as String,
@@ -62,6 +73,13 @@ class EventsDB {
         isPublished: (row['isPublished'] as int) == 1,
       );
     }).toList();
+  }
+
+  Category _parseCategory(String categoryString) {
+    return Category.values.firstWhere(
+      (category) => category.toString().split('.').last == categoryString,
+      orElse: () => Category.party,
+    );
   }
 
   Future<int> getCreatedEventsCount(String userId) async {
@@ -89,18 +107,52 @@ class EventsDB {
   }
 
   Status _determineStatus(DateTime date) {
-    final now = DateTime.now();
-    if (date.isBefore(now)) {
+    DateTime today = DateTime.now();
+    DateTime todayDate = DateTime(today.year, today.month, today.day);
+    DateTime eventDate = date;
+
+    if (eventDate.isBefore(todayDate)) {
       return Status.Past;
-    } else if (date.isAfter(
-      now.add(
-        const Duration(days: 1),
-      ),
-    )) {
-      return Status.Upcoming;
-    } else {
+    } else if (eventDate.year == today.year &&
+        eventDate.month == today.month &&
+        eventDate.day == today.day) {
       return Status.Current;
+    } else {
+      return Status.Upcoming;
     }
+  }
+
+  Future<void> deleteEvent(String eventId) async {
+    final database = await DatabaseService().database;
+
+    await database.delete(
+      tableName,
+      where: 'ID = ?',
+      whereArgs: [eventId],
+    );
+  }
+
+  Future<int> updateEvent(
+      {required String id,
+      required String name,
+      required String description,
+      required String location,
+      required Category category,
+      required DateTime date}) async {
+    final database = await DatabaseService().database;
+
+    return await database.update(
+      tableName,
+      {
+        'name': name,
+        'description': description,
+        'location': location,
+        'category': category.name,
+        'date': date.toIso8601String(),
+      },
+      where: 'ID = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<void> toggleIsPublished(String eventID) async {

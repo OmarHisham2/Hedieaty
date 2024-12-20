@@ -6,9 +6,9 @@ import 'package:hedieaty2/presentation/widgets/myCircle.dart';
 const COLOR_BOX_BACKGROUND_LIGHT = Color(0xffe73a39);
 const COLOR_BOX_BACKGROUND_DARK = Color.fromARGB(255, 163, 58, 58);
 
-class EventItem extends StatelessWidget {
+class EventItemUser extends StatelessWidget {
   final Event event;
-  const EventItem({
+  const EventItemUser({
     required this.event,
     super.key,
     required,
@@ -42,8 +42,8 @@ class EventItem extends StatelessWidget {
                   width: 45,
                 ),
                 const Spacer(),
-                MyCircle(
-                  color: event.isPublished ? Colors.green : Colors.white,
+                const MyCircle(
+                  color: Colors.green,
                 ),
                 addHorizontalSpace(5),
                 const SizedBox(

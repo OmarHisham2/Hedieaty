@@ -8,6 +8,7 @@ import 'package:hedieaty2/data/repositories/firebase_service.dart';
 import 'package:hedieaty2/domain/usecases/add_event.dart';
 import 'package:hedieaty2/presentation/widgets/CheckboxFormField.dart';
 import 'package:hedieaty2/services/auth/auth.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class AddNewEvent extends StatefulWidget {
   const AddNewEvent({super.key});
@@ -23,9 +24,25 @@ class _AddNewEventState extends State<AddNewEvent> {
   DateTime? _selectedDate;
   String _location = '';
   String _description = '';
+  final String _eventStatus = '';
   bool _isPublished = false;
   final AddEvent _addEvent = AddEvent(EventsDB());
   final _rlService = FirebaseService();
+
+  Status getStatus() {
+    DateTime today = DateTime.now();
+    DateTime todayDate = DateTime(today.year, today.month, today.day);
+    DateTime eventDate =
+        DateTime(_selectedDate!.year, _selectedDate!.month, _selectedDate!.day);
+
+    if (eventDate.isAtSameMomentAs(todayDate)) {
+      return Status.Current;
+    } else if (eventDate.isBefore(todayDate)) {
+      return Status.Past;
+    } else {
+      return Status.Upcoming;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +68,7 @@ class _AddNewEventState extends State<AddNewEvent> {
                 onSaved: (value) => _eventName = value!,
                 validator: (value) =>
                     value!.isEmpty ? 'Event name is required' : null,
+                maxLength: 25,
               ),
               addVerticalSpace(20),
               Row(
@@ -68,6 +86,8 @@ class _AddNewEventState extends State<AddNewEvent> {
                         onChanged: (value) {
                           _selectedCategory = value!;
                         },
+                        validator: (value) =>
+                            value == null ? 'Category is required' : null,
                         items: Category.values.map((Category category) {
                           return DropdownMenuItem<Category>(
                             value: category,
@@ -96,17 +116,22 @@ class _AddNewEventState extends State<AddNewEvent> {
               TextFormField(
                 decoration: const InputDecoration(label: Text('Location')),
                 onSaved: (value) => _location = value!,
+                validator: (value) =>
+                    value!.isEmpty ? 'Location is required' : null,
               ),
               addVerticalSpace(20),
               TextFormField(
                 decoration: const InputDecoration(label: Text('Description')),
                 onSaved: (value) => _description = value!,
+                validator: (value) =>
+                    value!.isEmpty ? 'Description is required' : null,
               ),
               addVerticalSpace(20),
               Container(
                 margin:
                     const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                 child: CheckboxFormField(
+                  initialValue: _isPublished,
                   onSaved: (value) {
                     _isPublished = value!;
                   },
@@ -124,16 +149,50 @@ class _AddNewEventState extends State<AddNewEvent> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     String eventID = uuid.v4();
-                    await _addEvent(
-                        id: eventID,
-                        name: _eventName,
-                        date: _selectedDate!,
-                        location: _location,
-                        description: _description,
-                        userID: Auth().currentUser!.uid,
-                        category: _selectedCategory,
-                        isPublished: _isPublished);
 
+                    if (_isPublished &&
+                        !(await InternetConnection().hasInternetAccess)) {
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                            showCloseIcon: false,
+                            behavior: SnackBarBehavior.floating,
+                            content: AwesomeSnackbarContent(
+                              title: 'Cannot Publish Event',
+                              message:
+                                  'You have to be online to publish an event.\nSet to Not Publish if you want  to proceed.',
+                              titleTextStyle: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                              messageTextStyle: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
+                              contentType: ContentType.warning,
+                            ),
+                          ),
+                        );
+
+                      return;
+                    } else {
+                      await _addEvent(
+                          id: eventID,
+                          name: _eventName,
+                          date: _selectedDate!,
+                          location: _location,
+                          description: _description,
+                          userID: Auth().currentUser!.uid,
+                          category: _selectedCategory,
+                          isPublished: _isPublished);
+                    }
                     if (_isPublished) {
                       _rlService.rlCreateEvent(Event(
                         name: _eventName,
@@ -143,7 +202,7 @@ class _AddNewEventState extends State<AddNewEvent> {
                         userID: Auth().currentUser!.uid,
                         category: _selectedCategory,
                         id: eventID,
-                        status: Status.Current,
+                        status: getStatus() ?? Status.Past,
                         giftList: [],
                       ));
                     }

@@ -4,6 +4,7 @@ import 'package:hedieaty2/data/models/event.dart';
 import 'package:hedieaty2/data/repositories/events_db.dart';
 import 'package:hedieaty2/presentation/screens/events/event_screen_normal.dart';
 import 'package:hedieaty2/presentation/widgets/event_item.dart';
+import 'package:hedieaty2/presentation/widgets/event_item_user.dart';
 import 'package:hedieaty2/presentation/widgets/sort_options.dart';
 import 'package:hedieaty2/core/utils/helper_widgets.dart';
 import 'package:hedieaty2/services/auth/auth.dart';
@@ -130,7 +131,7 @@ class _NormalEventListScreenState extends State<NormalEventListScreen> {
                                       ),
                                     );
                                   },
-                                  child: EventItem(event: event),
+                                  child: EventItemUser(event: event),
                                 );
                               }),
                     ),

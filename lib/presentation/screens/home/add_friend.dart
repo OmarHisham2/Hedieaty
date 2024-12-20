@@ -36,6 +36,14 @@ class _AddFriendState extends State<AddFriend> {
       if (userMap != null) {
         final friendID = userMap['id'];
 
+        if (friendID == widget.currentUserID) {
+          setState(() {
+            _errorMessage = "You cannot add yourself!";
+          });
+
+          return;
+        }
+
         await FriendsDB().addFriend(
           userID: widget.currentUserID,
           friendID: friendID,

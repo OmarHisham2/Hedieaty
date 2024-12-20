@@ -35,11 +35,13 @@ class _MyEventListState extends State<MyEventList> {
   }
 
   void _navigateToAddEventScreen() async {
-    await Navigator.of(context).push(
+    await Navigator.of(context)
+        .push(
       MaterialPageRoute(builder: (ctx) => const AddNewEvent()),
-    );
-
-    _fetchEvents();
+    )
+        .then((value) {
+      _fetchEvents();
+    });
   }
 
   @override
@@ -146,15 +148,17 @@ class _MyEventListState extends State<MyEventList> {
                                   final event = events[index];
                                   return InkWell(
                                     onTap: () {
-                                      Navigator.of(context).push(
+                                      Navigator.of(context)
+                                          .push(
                                         MaterialPageRoute(
                                           builder: (ctx) => EventScreenOwner(
                                             eventDetails: event,
                                           ),
                                         ),
-                                      );
-
-                                      _fetchEvents();
+                                      )
+                                          .then((value) {
+                                        _fetchEvents();
+                                      });
                                     },
                                     child: EventItem(event: event),
                                   );

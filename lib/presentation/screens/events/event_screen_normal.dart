@@ -114,17 +114,19 @@ class _EventScreenNormalState extends State<EventScreenNormal> {
 
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(const SnackBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          showCloseIcon: false,
-          behavior: SnackBarBehavior.floating,
-          content: AwesomeSnackbarContent(
-            title: 'Gift Pledged!',
-            message: 'You have successfully pledged this gift!',
-            contentType: ContentType.success,
+        ..showSnackBar(
+          const SnackBar(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            showCloseIcon: false,
+            behavior: SnackBarBehavior.floating,
+            content: AwesomeSnackbarContent(
+              title: 'Gift Pledged!',
+              message: 'You have successfully pledged this gift!',
+              contentType: ContentType.success,
+            ),
           ),
-        ));
+        );
 
       _fetchPledgedAndParticipantCounts();
     } catch (e) {
@@ -376,18 +378,23 @@ class _EventScreenNormalState extends State<EventScreenNormal> {
                           itemCount: filteredGifts.length,
                           itemBuilder: (context, index) {
                             final gift = filteredGifts[index];
-                            return Column(
-                              children: [
-                                GiftItemNormal(
-                                  giftDetails: gift,
-                                  isPledged: gift.pledgerID.isNotEmpty,
-                                  onPledge: () {
-                                    onPledge(gift);
-                                  },
-                                ),
-                                addVerticalSpace(20),
-                              ],
-                            );
+                            filteredGifts.isEmpty
+                                ? const Center(
+                                    child: Text('No Gifts Added yet!'),
+                                  )
+                                : Column(
+                                    children: [
+                                      GiftItemNormal(
+                                        giftDetails: gift,
+                                        isPledged: gift.pledgerID.isNotEmpty,
+                                        onPledge: () {
+                                          onPledge(gift);
+                                        },
+                                      ),
+                                      addVerticalSpace(20),
+                                    ],
+                                  );
+                            return null;
                           },
                         ),
                       ],

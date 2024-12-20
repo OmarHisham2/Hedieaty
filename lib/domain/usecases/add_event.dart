@@ -23,6 +23,7 @@ class AddEvent {
         location: location,
         description: description,
         userID: userID,
+        category: category.name,
         isPublished: isPublished);
   }
 }
