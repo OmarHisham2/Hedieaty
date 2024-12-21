@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 const COLOR_BOX_BACKGROUND_LIGHT = Color(0xffe63c3a);
 const COLOR_BOX_BACKGROUND_DARK = Color.fromARGB(255, 206, 72, 72);
 
@@ -16,7 +15,7 @@ class AddEventButton extends StatelessWidget {
 
     return Container(
       width: 250,
-      height: 150,
+      height: 160,
       decoration: BoxDecoration(
         color: isDark ? COLOR_BOX_BACKGROUND_DARK : COLOR_BOX_BACKGROUND_LIGHT,
         borderRadius: const BorderRadius.all(Radius.circular(30)),

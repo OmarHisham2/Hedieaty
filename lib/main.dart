@@ -10,9 +10,15 @@ import 'package:hedieaty2/presentation/screens/events/my_event_list_screen.dart'
 import 'package:hedieaty2/presentation/screens/home/profile_screen.dart';
 import 'package:hedieaty2/core/constants/theme_constants.dart';
 import 'package:hedieaty2/services/notifications/notification_service.dart';
+import 'package:scaled_app/scaled_app.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  ScaledWidgetsFlutterBinding.ensureInitialized(
+    scaleFactor: (deviceSize) {
+      const double widthOfDesign = 445;
+      return deviceSize.width / widthOfDesign;
+    },
+  );
   await Firebase.initializeApp();
 
   await NotificationService().initNotificaitons();

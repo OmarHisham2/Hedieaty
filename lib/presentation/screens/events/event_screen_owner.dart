@@ -177,7 +177,10 @@ class _EventScreenOwnerState extends State<EventScreenOwner> {
                 messageTextStyle: Theme.of(context)
                     .textTheme
                     .titleSmall!
-                    .copyWith(color: Colors.black, fontWeight: FontWeight.w500),
+                    .copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        overflow: TextOverflow.visible),
                 contentType: ContentType.warning,
               ),
             ),

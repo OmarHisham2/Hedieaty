@@ -60,117 +60,120 @@ class LoginScreen extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 75, 0, 0),
-        child: Column(children: [
-          Center(
-            child: Hero(
-              tag: 'appLogo',
-              child: Image.asset(
-                'assets/images/appLogo.png',
-                width: 250,
-                height: 250,
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 75, 0, 0),
+          child: Column(children: [
+            Center(
+              child: Hero(
+                tag: 'appLogo',
+                child: Image.asset(
+                  'assets/images/appLogo.png',
+                  width: 250,
+                  height: 250,
+                ),
               ),
             ),
-          ),
-          Text(
-            'Hedieaety',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          addVerticalSpace(5),
-          const Text('An Event Management Application'),
-          addVerticalSpace(30),
-          Padding(
-            padding: const EdgeInsets.all(25),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    key: const ValueKey('email_field'),
-                    onSaved: (value) {
-                      _enteredMail = value ?? '';
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter an email';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.email,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
+            Text(
+              'Hedieaety',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            addVerticalSpace(5),
+            const Text('An Event Management Application'),
+            addVerticalSpace(30),
+            Padding(
+              padding: const EdgeInsets.all(25),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      key: const ValueKey('email_field'),
+                      onSaved: (value) {
+                        _enteredMail = value ?? '';
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter an email';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.email,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                        label: const Text('Email'),
                       ),
-                      label: const Text('Email'),
                     ),
-                  ),
-                  addVerticalSpace(25),
-                  TextFormField(
-                    key: const ValueKey('password_field'),
-                    onSaved: (value) {
-                      _enteredPassword = value ?? "";
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a password';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.password,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
+                    addVerticalSpace(25),
+                    TextFormField(
+                      key: const ValueKey('password_field'),
+                      onSaved: (value) {
+                        _enteredPassword = value ?? "";
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a password';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.password,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                        label: const Text('Password'),
                       ),
-                      label: const Text('Password'),
+                      obscureText: true,
                     ),
-                    obscureText: true,
-                  ),
-                  addVerticalSpace(35),
-                  Center(
-                      child: ElevatedButton(
-                    key: const ValueKey('submit_button'),
-                    onPressed: signInWithEmailAndPassword,
-                    child: const Text('Log In'),
-                  ))
-                ],
+                    addVerticalSpace(35),
+                    Center(
+                        child: ElevatedButton(
+                      key: const ValueKey('submit_button'),
+                      onPressed: signInWithEmailAndPassword,
+                      child: const Text('Log In'),
+                    ))
+                  ],
+                ),
               ),
             ),
-          ),
-          addVerticalSpace(5),
-          const SizedBox(
-            width: 150,
-            child: Divider(),
-          ),
-          addVerticalSpace(15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Don\'t have an account?',
-                style: Theme.of(context).textTheme.labelSmall!,
-              ),
-              addHorizontalSpace(5),
-              InkWell(
-                child: Text(
-                  'Register Now!',
-                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.bold),
+            addVerticalSpace(5),
+            const SizedBox(
+              width: 150,
+              child: Divider(),
+            ),
+            addVerticalSpace(15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Don\'t have an account?',
+                  style: Theme.of(context).textTheme.labelSmall!,
                 ),
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (builder) => RegisterScreen(),
+                addHorizontalSpace(5),
+                InkWell(
+                  child: Text(
+                    'Register Now!',
+                    style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.bold),
                   ),
-                ),
-              )
-            ],
-          ),
-        ]),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (builder) => RegisterScreen(),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ]),
+        ),
       ),
     );
   }

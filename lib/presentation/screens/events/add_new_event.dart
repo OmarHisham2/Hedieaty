@@ -49,6 +49,7 @@ class _AddNewEventState extends State<AddNewEvent> {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
@@ -69,7 +70,7 @@ class _AddNewEventState extends State<AddNewEvent> {
                 onSaved: (value) => _eventName = value!,
                 validator: (value) =>
                     value!.isEmpty ? 'Event name is required' : null,
-                maxLength: 25,
+                maxLength: 15,
               ),
               addVerticalSpace(10),
               Row(
@@ -180,7 +181,8 @@ class _AddNewEventState extends State<AddNewEvent> {
                                   .titleSmall!
                                   .copyWith(
                                       color: Colors.black,
-                                      fontWeight: FontWeight.w500),
+                                      fontWeight: FontWeight.w500,
+                                      overflow: TextOverflow.visible),
                               contentType: ContentType.warning,
                             ),
                           ),

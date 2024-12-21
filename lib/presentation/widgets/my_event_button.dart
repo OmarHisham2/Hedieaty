@@ -23,8 +23,8 @@ class GoodCard extends StatelessWidget {
     TextTheme textTheme = Theme.of(context).textTheme;
 
     return Container(
-      width: 200,
-      height: 150,
+      width: 210,
+      height: 160,
       decoration: BoxDecoration(
         color: isDark ? COLOR_BOX_BACKGROUND_DARK : COLOR_BOX_BACKGROUND_LIGHT,
         borderRadius: const BorderRadius.all(Radius.circular(30)),
