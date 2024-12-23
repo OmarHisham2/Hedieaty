@@ -161,9 +161,8 @@ class GiftsDB {
           orElse: () => GiftStatus.available,
         ),
         giftCategory: GiftCategory.values.firstWhere(
-          (category) =>
-              category.toString() == 'GiftCategory.${row['category']}',
-          orElse: () => GiftCategory.books,
+          (category) => category.toString() == row['category'],
+          orElse: () => GiftCategory.na,
         ),
         isPublished: row['isPublished'] as int == 1,
       );
