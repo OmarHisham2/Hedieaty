@@ -32,4 +32,4 @@
 
 ## **Showcase Video**
 
-[Hedieaty Showcase]((https://youtu.be/O156heIY5zY))
+[Hedieaty Showcase](https://youtu.be/O156heIY5zY)
